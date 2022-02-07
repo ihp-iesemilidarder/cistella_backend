@@ -39,13 +39,14 @@ function loadTrolley(){
     let priceTotalTolley = 0;
     coursesTrolley.forEach((course) => {
         count+=course.count;
-        priceTotalTolley += (parseInt(course.price)*course.count);
+        priceTotalTolley += (parseFloat(course.price)*course.count);
         let clase =(course.offert[1] == 0)?'style="display:none;"':"";
+        console.log(course.teachers);
         Trolley.innerHTML += `
         <tr>
             <td><img src="${course.img}"></td>
             <td>${course.title}</td>
-            <td>${course.teacher}</td>
+            <td>${course.teachers.toString()}</td>
             <td>${course.price}€</td>
             <td id="count">${course.count}</td>
             <td id="offert" ${clase}>${course.offert[1]}%</td>
@@ -60,6 +61,14 @@ function loadTrolley(){
         <td>${priceTotalTolley}€</td>
     </tr>
     `;
+}
+
+function listTeachers(teachers){
+    let list=[];
+    teachers.forEach(teacher=>{
+        list.push(teacher.textContent);
+    });
+    return list;
 }
 
 function addCourse(e){
@@ -79,8 +88,8 @@ function addCourse(e){
         id: buttonCourseElement.getAttribute("data-id"),
         title: courseElement.querySelector("h4").textContent,
         description: courseElement.querySelector(".descripcion").textContent,
-        price: parseInt(courseElement.querySelector(".precio > span").textContent.replace("€","")),
-        teacher: courseElement.querySelector(".profesor").textContent,
+        price: parseFloat(courseElement.querySelector(".precio > span").textContent.replace("€","")),
+        teachers: listTeachers(courseElement.querySelectorAll(".profesor span")),
         count:1,
         offert: [courseElement.querySelector("#descuento").value.toUpperCase()],
         priceTotal: 0
@@ -143,27 +152,39 @@ const printStars = (count)=>{
     return stars;
 };
 
+function printTeachers(teachers){
+    result = "";
+    teachers.forEach(teacher=>{
+        result+=`
+            <p class="profesor"><i class="fas fa-user"></i><span>${teacher.teaName} ${teacher.teaSurname1} ${teacher.teaSurname2}</span></p>
+        `;         
+    });
+    return result;
+}
+
 function printCourses(data, type) {
     coursesList.innerHTML = "";
     data.forEach(ob => {
         let category = document.querySelector("select option:checked").value;
         // I convert the values to upper case always for compare
+        console.log(ob);
         if(!type || String(ob[category]).toUpperCase().includes(type.toUpperCase())){
             coursesList.innerHTML += `
             <div class="card">
-                <img src="img/${ob.img}" class="imagen-curso u-full-width">
+                <img src="img/${ob.couImg}" class="imagen-curso u-full-width">
                 <div class="info-card">
-                    <h4>${ob.title}</h4>
-                    <p class="descripcion">${ob.description}</p>
-                    <p class="profesor"><i class="fas fa-user"></i> ${ob.teacher}</p>
+                    <h4>${ob.couTitle}</h4>
+                    <p class="descripcion">${ob.couDescription}</p>
+                    ${printTeachers(ob.teachers)}
                     <div id="stars">
-                        ${printStars(ob.stars)}
+                        ${printStars(ob.couStars)}
                     </div>
-                    <p class="precio">${ob.price}€ <span class="u-pull-right ">${ob.priceOffer}€</span></p>
+                    <p class="precio">${ob.couPrice}€ <span class="u-pull-right ">${ob.couPriceOffer}€</span></p>
                     <input type="text" placeholder="descuento" id="descuento">
-                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.id}">Agregar Al Carrito</a>
-                    <p class="type">${ob.type}</p>
-                    <p class="date">${ob.StartDate} <---> ${ob.EndDate}</p>
+                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
+                    <p class="type">${ob.category}</p>
+                    <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.couDateStart}</i><i class="fas fa-clock"> ${ob.couScheduleStart}H</i></p>
+                    <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.couDateFinish}</i><i class="fas fa-stopwatch"> ${ob.couDuration}H</i></p>
                 </div>
             </div>
             `;
@@ -172,7 +193,7 @@ function printCourses(data, type) {
 }
 
 function loadCourses(type) {
-    fetch("data/cursos.json")
+    fetch("http://localhost:8080/api/courses")
         .then(r => r.json()) 
         .then(data => printCourses(data, type))
 }

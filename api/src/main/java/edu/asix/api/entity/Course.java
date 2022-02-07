@@ -47,7 +47,8 @@ public class Course  implements Serializable{
   		  name = "couxtea", 
   		  joinColumns = @JoinColumn(name = "cxt_cou_id"), 
   		  inverseJoinColumns = @JoinColumn(name = "cxt_tea_id"))
-    Set<Teacher> teachers;
+    @Column(insertable=false,updatable=false)
+    private Set<Teacher> teachers;
 	
 	@Column(name="cou_price")
 	private double couPrice;
@@ -76,28 +77,20 @@ public class Course  implements Serializable{
 	@Column(name="cou_cat_name")
 	private String category;
 
-    @JsonManagedReference
 	@ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(
     		  name = "couxthe", 
     		  joinColumns = @JoinColumn(name = "cxt_cou_id"), 
     		  inverseJoinColumns = @JoinColumn(name = "cxt_the_id"))
-    Set<Theme> themes;
+	@Column(insertable=false,updatable=false)
+    private Set<Theme> themes;
 
 	public Set<Teacher> getTeachers() {
 		return teachers;
 	}
 
-	public void setTeachers(Set<Teacher> teachers) {
-		this.teachers = teachers;
-	}
-
 	public Set<Theme> getThemes() {
 		return themes;
-	}
-
-	public void setThemes(Set<Theme> themes) {
-		this.themes = themes;
 	}
 
 	public int getCouId() {

@@ -235,6 +235,11 @@ ul {
 .card h4 {
   margin-bottom: 5px;
 }
+.dateStart,.dateFinish{
+  display: grid;
+  grid-template-columns: auto auto;
+  text-align: center;
+}
 .info-card .precio {
   text-decoration: line-through;
   font-size: 18px;
