@@ -1,0 +1,93 @@
+[
+  {
+    "id": 1,
+    "title": "HTML5, CSS3, JavaScript para Principiantes",
+    "description": "Aprende ha hacer un sitio web desde 0 a profesional",
+    "teacher": "Jhilmar León Guerrero",
+    "price": 373,
+    "priceOffer": 93,
+    "img": "curso1.jpg",
+    "StartDate": "01-01-2021",
+    "EndDate": "28-02-2021",
+    "stars": 5,
+    "type": "Programacion"
+  },
+  {
+    "id": 2,
+    "title": "Curso de Comida Vegetariana",
+    "description": "¿Quieres comer sano? haz este curso!",
+    "teacher": "Juan Pastor",
+    "price": 123,
+    "priceOffer": 50,
+    "img": "curso2.jpg",
+    "StartDate": "01-03-2021",
+    "EndDate": "30-04-2021",
+    "stars": 4.6,
+    "type": "Cocina"
+  },
+  {
+    "id": 3,
+    "title": "Guitarra para Principiantes",
+    "description": "¿Te gustaría tocar la guitarra? Haz este curso con un profesional",
+    "teacher": "Jose Manuel",
+    "price": 90,
+    "priceOffer": 25,
+    "img": "curso3.jpg",
+    "StartDate": "01-05-2021",
+    "EndDate": "30-06-2021",
+    "stars": 2.5,
+    "type": "Musica"
+  },
+  {
+    "id": 4,
+    "title": "Huerto en tu casa",
+    "description": "Haz tu propio huerto!",
+    "teacher": "Juan Antonio",
+    "price": 45,
+    "priceOffer": 20,
+    "img": "curso4.jpg",
+    "StartDate": "01-07-2021",
+    "EndDate": "25-08-2021",
+    "stars": 3.5,
+    "type": "Hogar"
+  },
+  {
+    "id": 5,
+    "title": "Decoración con productos de tu hogar",
+    "description": "¿Quieres decorar la casa, sin pagar de más?",
+    "teacher": "Jose Antonio Millán",
+    "price": 120,
+    "priceOffer": 80,
+    "img": "curso5.jpg",
+    "StartDate": "04-09-2021",
+    "EndDate": "18-09-2021",
+    "stars": 3,
+    "type": "Hogar"
+  },
+  {
+    "id": 6,
+    "title": "Diseño Web para Principiantes",
+    "description": "¿Quieres aprender a como se construye una web? Apunte a este curso y lo verás",
+    "teacher": "Luís Alba",
+    "price": 50,
+    "priceOffer": 15,
+    "img": "curso6.jpg",
+    "StartDate": "07-10-2021",
+    "EndDate": "06-11-2021",
+    "stars": 3.3,
+    "type": "Programacion"
+  },
+  {
+    "id": 7,
+    "title": "Comida Mexicana para principiantes",
+    "description": "¿Te gusta la comida Mexicanam, pero no sabes hacerla?",
+    "teacher": "Juan pedro",
+    "price": 40,
+    "priceOffer": 20,
+    "img": "curso7.jpg",
+    "StartDate": "12-11-2021",
+    "EndDate": "21-03-2022",
+    "stars": 3,
+    "type": "Cocina"
+  }
+]
