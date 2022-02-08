@@ -28,6 +28,11 @@ public class CoursesController {
 		return serviceCourses.buscarTodos();
 	}
 	
+	@GetMapping("/courses/search/{category}/{text}")
+	public List<Course> buscarPorCategoria(@PathVariable("category") String category, @PathVariable("text") String text){
+		return serviceCourses.buscarPorCategoria(category,text);
+	}
+	
 	
 	@GetMapping("/courses/{id}") 
 	public Course recuperar(@PathVariable("id") int idCourse) {

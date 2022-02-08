@@ -10,4 +10,5 @@ public interface ICoursesService {
 	Course recuperar (int idCourse);
 	void guardar(Course course);
 	void eliminar(int idCourse);
+	List<Course> buscarPorCategoria(String category, String text);
 }

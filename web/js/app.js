@@ -132,7 +132,8 @@ function events(){
 
 function filterCourse(e){
     e.preventDefault();
-    loadCourses((search.value != "")?search.value:null);
+    let category = document.querySelector("select option:checked").value;
+    loadCourses(category,(search.value != "")?search.value:null);
 }
 
 const printStars = (count)=>{
@@ -165,14 +166,11 @@ function printTeachers(teachers){
     return result;
 }
 
-function printCourses(data, type) {
+function printCourses(data) {
     coursesList.innerHTML = "";
     data.forEach(ob => {
-        let category = document.querySelector("select option:checked").value;
         // I convert the values to upper case always for compare
-        console.log(ob);
-        if(!type || String(ob[category]).toUpperCase().includes(type.toUpperCase())){
-            coursesList.innerHTML += `
+        coursesList.innerHTML += `
             <div class="card">
                 <img src="img/${ob.couImg}" class="imagen-curso u-full-width">
                 <div class="info-card">
@@ -190,15 +188,17 @@ function printCourses(data, type) {
                     <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.couDateFinish}</i><i class="fas fa-stopwatch"> ${ob.couDuration}H</i></p>
                 </div>
             </div>
-            `;
-        }
+        `;
     });
 }
 
-function loadCourses(type) {
-    fetch("http://localhost:8080/api/courses")
-        .then(r => r.json()) 
-        .then(data => printCourses(data, type))
+const loadCourses=async(type, text)=>{
+    let request = await fetch(`http://localhost:8080/api/courses`);
+    if(type && text){
+        request = await fetch(`http://localhost:8080/api/courses/search/${type}/${text}`);
+    }
+    let data = await request.json();
+    printCourses(data);
 }
 
 function login(){
@@ -206,9 +206,9 @@ function login(){
     document.body.style = "overflow:hidden";
 }
 
-const init=()=> {
+const init=async()=> {
     loadTrolley();
-    loadCourses();
+    await loadCourses();
     events();
     buttonLogin.addEventListener("click",login);
     closeForm.addEventListener("click",(e)=>{

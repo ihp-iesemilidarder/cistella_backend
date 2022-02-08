@@ -1,5 +1,7 @@
 package edu.asix.api.service.jpa;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,21 @@ public class CoursesService implements ICoursesService {
 	
 	public List<Course> buscarTodos() {
 		return repoCourses.findAll();
+	}
+	
+	public List<Course> buscarPorCategoria(String category, String text){
+		switch(category) {
+			case "category":
+				return repoCourses.findByCategoryContaining(text);
+			case "name":
+				return repoCourses.findByCouTitleContaining(text);
+			case "price":
+				return repoCourses.findByCouPrice(Double.parseDouble(text));
+			case "DateStart":
+				return repoCourses.findByCouDateStart(LocalDate.parse(text));
+			default:
+				return repoCourses.findAll();
+		}
 	}
 
 	public void guardar(Course course) {
