@@ -4,6 +4,9 @@ let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
 const Trolley = document.querySelector("#lista-carrito > tbody");
 const numTrolley = document.querySelector("#num-cursos");
 const buttonEmptyTrolley = document.querySelector("#vaciar-carrito");
+const buttonLogin = document.querySelector("i.fa-sign-in-alt");
+const containerForm = document.querySelector("form#loginForm");
+const closeForm = containerForm.querySelector("i.fa-times");
 
 const emptyTrolley=(e) => {
     e.preventDefault();
@@ -198,10 +201,20 @@ function loadCourses(type) {
         .then(data => printCourses(data, type))
 }
 
+function login(){
+    containerForm.style="display:block";
+    document.body.style = "overflow:hidden";
+}
+
 const init=()=> {
     loadTrolley();
     loadCourses();
     events();
+    buttonLogin.addEventListener("click",login);
+    closeForm.addEventListener("click",(e)=>{
+        e.target.parentNode.parentNode.removeAttribute("style");
+        document.body.removeAttribute("style");
+    });
 }
 
 init();
