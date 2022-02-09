@@ -270,11 +270,11 @@ ul {
     top: 10%;
   }
 }
-form#loginForm{
+form#loginForm, div#themeCourse{
   display: none;
   z-index: 10;
   padding: 5%;
-  margin: 3%;
+  margin: 3% 15%;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0px 0px 5px rgb(0 0 0 / 50%);
@@ -285,13 +285,24 @@ form#loginForm{
   animation-name: animation-login-start;
   animation-duration: .5s;
 }
-form#loginForm i.fa-times{
+form#loginForm i.fa-times,div#themeCourse i.fa-times{
   font-size: 2em;
   color: #e0696d;
   position: absolute;
   top: 5%;
   right: 5%;
   cursor:pointer;
+}
+
+/*container theme*/
+div#themeCourse > div > div{
+  margin: 5% 0;
+}
+div#themeCourse > div > div > h5{
+  border-bottom: 2px solid black;
+  background: rgba(0,0,0,.1);
+  border-radius: 5px 5px 0 0;
+  padding: 0 5px;
 }
 
 /* Footer */

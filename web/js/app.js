@@ -6,6 +6,8 @@ const numTrolley = document.querySelector("#num-cursos");
 const buttonEmptyTrolley = document.querySelector("#vaciar-carrito");
 const buttonLogin = document.querySelector("i.fa-sign-in-alt");
 const containerForm = document.querySelector("form#loginForm");
+const containerTheme = document.querySelector("div#themeCourse");
+const closeTheme = containerTheme.querySelector("i.fa-times");
 const closeForm = containerForm.querySelector("i.fa-times");
 
 const emptyTrolley=(e) => {
@@ -123,11 +125,59 @@ function addCourse(e){
     }
 }
 
-function events(){
+const jsonTheme=async(id)=>{
+    let request = await fetch(`http://localhost:8080/api/themes/${id}`);
+    let data = await request.json();
+    return data;
+}
+
+const showListThemes=async(id)=>{
+    let request = await fetch(`http://localhost:8080/api/couxthes/c.${id}`);
+    let data = await request.json();
+    return data;
+}
+
+const printSheet=async(id)=>{
+    let themes = await showListThemes(id);
+    console.log(themes);
+    containerTheme.querySelector("div").innerHTML="";
+    themes.forEach(async theme=>{
+        console.log(theme.order);
+        let themeJSON = await jsonTheme(theme.theme);
+        console.log(themeJSON);
+        containerTheme.querySelector("div").innerHTML+=`
+            <div>
+                <h5><font color="red">${theme.order}.</font> ${themeJSON.theTitle}</h5>
+                <p>${themeJSON.theDescription}</p>                
+            </div>
+        `;
+    });
+}
+
+const showTheme=async(e)=>{
+    let node = e.target;
+    if(node.classList.contains("showTheme")){
+        await printSheet(node.dataset.id);
+    }
+    containerTheme.style="display:block";
+}
+
+const events=async()=>{
     search.addEventListener("keyup",filterCourse);
     coursesList.addEventListener("click",addCourse);
     Trolley.addEventListener("click",deleteCourse);
-    buttonEmptyTrolley.addEventListener("click",emptyTrolley)
+    buttonEmptyTrolley.addEventListener("click",emptyTrolley);
+    buttonLogin.addEventListener("click",login);
+    
+    closeForm.addEventListener("click",(e)=>{
+        e.target.parentNode.parentNode.removeAttribute("style");
+        document.body.removeAttribute("style");
+    });
+    closeTheme.addEventListener("click",(e)=>{
+        e.target.parentNode.removeAttribute("style");
+        document.body.removeAttribute("style");
+    });
+    coursesList.addEventListener("click",await showTheme);
 }
 
 function filterCourse(e){
@@ -182,6 +232,7 @@ function printCourses(data) {
                     </div>
                     <p class="precio">${ob.couPrice}€ <span class="u-pull-right ">${ob.couPriceOffer}€</span></p>
                     <input type="text" placeholder="descuento" id="descuento">
+                    <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.couId}">Ver temario</a>
                     <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
                     <p class="type">${ob.category}</p>
                     <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.couDateStart}</i><i class="fas fa-clock"> ${ob.couScheduleStart}H</i></p>
@@ -209,12 +260,7 @@ function login(){
 const init=async()=> {
     loadTrolley();
     await loadCourses();
-    events();
-    buttonLogin.addEventListener("click",login);
-    closeForm.addEventListener("click",(e)=>{
-        e.target.parentNode.parentNode.removeAttribute("style");
-        document.body.removeAttribute("style");
-    });
+    await events();
 }
 
 init();

@@ -23,6 +23,18 @@ public class Couxthe {
 	
 	@Column(name="cxt_the_id")
 	private int theme;
+	
+	@Column(name="cxt_order")
+	private int order;
+
+	
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
 	public int getId() {
 		return id;
