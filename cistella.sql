@@ -72,7 +72,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (6,'Desarrollo Python','Descripcion',50.50,100.50,'picture.jpg','2002-02-03','2003-02-03','20:00:00','01:00:00',3.0,'Informatica');
+INSERT INTO `course` VALUES (6,'Desarrollo Python','Descripcion',0.50,100.50,'curso1.jpg','2002-02-03','2003-02-03','20:00:00','01:00:00',3.5,'Informatica');
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `couxtea` (
   KEY `cxt_tea_FK` (`cxt_tea_id`),
   CONSTRAINT `cxt_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `cxt_tea_FK` FOREIGN KEY (`cxt_tea_id`) REFERENCES `teacher` (`tea_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,7 @@ CREATE TABLE `couxtea` (
 
 LOCK TABLES `couxtea` WRITE;
 /*!40000 ALTER TABLE `couxtea` DISABLE KEYS */;
-INSERT INTO `couxtea` VALUES (1,6,7),(2,6,11);
+INSERT INTO `couxtea` VALUES (8,6,7),(7,6,11);
 /*!40000 ALTER TABLE `couxtea` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,12 +116,14 @@ CREATE TABLE `couxthe` (
   `cxt_id` int(11) NOT NULL AUTO_INCREMENT,
   `cxt_cou_id` int(11) NOT NULL,
   `cxt_the_id` int(11) NOT NULL,
+  `cxt_order` int(11) NOT NULL,
   PRIMARY KEY (`cxt_id`),
   UNIQUE KEY `cxt_UK` (`cxt_cou_id`,`cxt_the_id`),
   KEY `couxthe_the_FK` (`cxt_the_id`),
+  KEY `cxt_order_IX` (`cxt_order`),
   CONSTRAINT `couxthe_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `couxthe_the_FK` FOREIGN KEY (`cxt_the_id`) REFERENCES `theme` (`the_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,6 +132,7 @@ CREATE TABLE `couxthe` (
 
 LOCK TABLES `couxthe` WRITE;
 /*!40000 ALTER TABLE `couxthe` DISABLE KEYS */;
+INSERT INTO `couxthe` VALUES (2,6,1,1),(3,6,2,2),(6,6,3,3);
 /*!40000 ALTER TABLE `couxthe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +201,7 @@ CREATE TABLE `theme` (
   `the_title` varchar(100) NOT NULL,
   `the_description` varchar(500) NOT NULL,
   PRIMARY KEY (`the_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +210,7 @@ CREATE TABLE `theme` (
 
 LOCK TABLES `theme` WRITE;
 /*!40000 ALTER TABLE `theme` DISABLE KEYS */;
-INSERT INTO `theme` VALUES (1,'Introduccion','Introduccion al desarrollo web');
+INSERT INTO `theme` VALUES (1,'Introduccion','Introduccion al desarrollo web'),(2,'HTML & CSS','Aprenderas hacer maquetaciones Web con HTML & CSS'),(3,'Javascript','Aprenderas hacer funciones y logistica del lado del cliente.');
 /*!40000 ALTER TABLE `theme` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -220,4 +223,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-07 18:47:12
+-- Dump completed on 2022-02-09 15:49:27
