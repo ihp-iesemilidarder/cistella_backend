@@ -125,44 +125,38 @@ function addCourse(e){
     }
 }
 
-const jsonTheme=async(id)=>{
-    let request = await fetch(`http://localhost:8080/api/themes/${id}`);
+const showListCoursesThemes=async(id)=>{
+    let request = await fetch(`http://localhost:8080/api/couxthes`);
     let data = await request.json();
-    return data;
-}
-
-const showListThemes=async(id)=>{
-    let request = await fetch(`http://localhost:8080/api/couxthes/c.${id}`);
-    let data = await request.json();
+    data = data.filter(theme=>theme.course.couId==id);
     return data;
 }
 
 const printSheet=async(id)=>{
-    let themes = await showListThemes(id);
-    console.log(themes);
+    let couxthes = await showListCoursesThemes(id);
     containerTheme.querySelector("div").innerHTML="";
-    themes.forEach(async theme=>{
-        console.log(theme.order);
-        let themeJSON = await jsonTheme(theme.theme);
-        console.log(themeJSON);
+    couxthes.sort((a,b)=>a.order-b.order);
+    console.log(couxthes)
+    couxthes.forEach(couxthe=>{
+        console.log(couxthe);
         containerTheme.querySelector("div").innerHTML+=`
             <div>
-                <h5><font color="red">${theme.order}.</font> ${themeJSON.theTitle}</h5>
-                <p>${themeJSON.theDescription}</p>                
+                <h5><font color="red">${couxthe.order}.</font> ${couxthe.theme.theTitle}</h5>
+                <p>${couxthe.theme.theDescription}</p>                
             </div>
         `;
     });
 }
 
-const showTheme=async(e)=>{
+const showTheme=(e)=>{
     let node = e.target;
     if(node.classList.contains("showTheme")){
-        await printSheet(node.dataset.id);
+        printSheet(node.dataset.id);
     }
     containerTheme.style="display:block";
 }
 
-const events=async()=>{
+const events=()=>{
     search.addEventListener("keyup",filterCourse);
     coursesList.addEventListener("click",addCourse);
     Trolley.addEventListener("click",deleteCourse);
@@ -177,7 +171,7 @@ const events=async()=>{
         e.target.parentNode.removeAttribute("style");
         document.body.removeAttribute("style");
     });
-    coursesList.addEventListener("click",await showTheme);
+    coursesList.addEventListener("click",showTheme);
 }
 
 function filterCourse(e){
@@ -260,7 +254,7 @@ function login(){
 const init=async()=> {
     loadTrolley();
     await loadCourses();
-    await events();
+    events();
 }
 
 init();

@@ -28,12 +28,6 @@ public class CouxthesController {
 		return serviceCouxthes.buscarTodos();
 	}
 	
-	@GetMapping("/couxthes/c.{course}") 
-	public List<Couxthe> buscarPorCurso(@PathVariable("course") int course) {
-		 List<Couxthe> couxthes = serviceCouxthes.buscarPorCurso(course);
-		 return couxthes;
-	}
-	
 	@GetMapping("/couxthes/{id}") 
 	public Couxthe recuperar(@PathVariable("id") int id) {
 		 Couxthe couxthe = serviceCouxthes.recuperar(id);

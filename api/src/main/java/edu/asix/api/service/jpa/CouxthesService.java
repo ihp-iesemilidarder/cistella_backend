@@ -16,10 +16,6 @@ public class CouxthesService implements ICouxthesService {
 	@Autowired
 	private CouxthesRepository repoCouxthes;
 	
-	public List<Couxthe> buscarPorCurso(int course){
-		return repoCouxthes.findByCourseOrderByOrderAsc(course);
-	}
-	
 	public List<Couxthe> buscarTodos() {
 		return repoCouxthes.findAll();
 	}

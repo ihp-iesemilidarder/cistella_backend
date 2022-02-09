@@ -9,5 +9,4 @@ import edu.asix.api.entity.Category;
 import edu.asix.api.entity.Couxthe;
 
 public interface CouxthesRepository extends JpaRepository<Couxthe, Integer> {
-	public List<Couxthe> findByCourseOrderByOrderAsc(int course);
 }

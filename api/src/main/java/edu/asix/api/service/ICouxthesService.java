@@ -10,5 +10,4 @@ public interface ICouxthesService {
 	Couxthe recuperar (int id);
 	void guardar(Couxthe couxthe);
 	void eliminar(int id);
-	List<Couxthe> buscarPorCurso(int course);
 }

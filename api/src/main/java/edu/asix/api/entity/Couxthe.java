@@ -1,6 +1,8 @@
 package edu.asix.api.entity;
 import java.util.Date;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,11 +20,13 @@ public class Couxthe {
 	@Column(name="cxt_id")
 	private int id;
 	
-	@Column(name="cxt_cou_id")
-	private int course;
+	@OneToOne
+    @JoinColumn(name = "cxt_cou_id", referencedColumnName = "cou_id")
+	private Course course;
 	
-	@Column(name="cxt_the_id")
-	private int theme;
+	@OneToOne
+    @JoinColumn(name = "cxt_the_id", referencedColumnName = "the_id")
+	private Theme theme;
 	
 	@Column(name="cxt_order")
 	private int order;
@@ -44,20 +48,21 @@ public class Couxthe {
 		this.id = id;
 	}
 
-	public int getCourse() {
+	public Course getCourse() {
 		return course;
 	}
 
-	public void setCourse(int course) {
+	public void setCourse(Course course) {
 		this.course = course;
 	}
 
-	public int getTheme() {
+	public Theme getTheme() {
 		return theme;
 	}
 
-	public void setTheme(int theme) {
+	public void setTheme(Theme theme) {
 		this.theme = theme;
 	}
+
 	
 }
