@@ -8,7 +8,8 @@
     <title>Curso Landia</title>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/FrontOffice.css">
+    <link rel="stylesheet" href="css/BackOffice.css">
     <script src="https://kit.fontawesome.com/fd78996b80.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
@@ -103,6 +104,7 @@
     <!-- Central lista de cursos -->
     <main id="lista-cursos" class="container">
         <h1 id="encabezado" class="encabezado">Cursos online y presenciales</h1>
+        <div id="buttons-admin"></div>
         <section id="list-content">       
         </section>
     </main>
@@ -165,7 +167,16 @@
         <div>
         </div>
       </div>
-    <script src="js/app.js"></script>
+
+      <!-- Admin teachers -->
+      <div id="containerTeachers"></div>
+
+      <!-- Admin categorias -->
+      <div id="containerCategories"></div>
+
+      <!-- Admin teachers -->
+      <div id="containerProfiles"></div>
+    <script src="js/app.js" type="module"></script>
 </body>
 
 </html>
