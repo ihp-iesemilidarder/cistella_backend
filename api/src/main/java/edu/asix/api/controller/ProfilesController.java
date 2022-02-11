@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lambdaworks.crypto.SCryptUtil;
+
 import edu.asix.api.entity.Profile;
 import edu.asix.api.entity.Teacher;
 import edu.asix.api.service.IProfilesService;
@@ -52,6 +54,9 @@ public class ProfilesController {
 				result.put("text", "Falta rellenar la contraseña");
 				return result;
 			}
+			String  originalPassword = profile.getProPassword().toString();
+			String generatedSecuredPasswordHash = SCryptUtil.scrypt(originalPassword, 16, 16, 16);
+			profile.setProPassword(generatedSecuredPasswordHash);
 			serviceProfiles.guardar(profile);
 			result.put("type", "success");
 			result.put("title", "Registrado correctamente");

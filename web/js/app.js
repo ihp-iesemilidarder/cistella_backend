@@ -215,6 +215,25 @@ const sendRegister=async()=>{
     await fetchsRegister(formData);
 }
 
+const sendLogin=async()=>{
+    data = {
+        username:containerLogin.querySelector("input[name='user']").value,
+        password:containerLogin.querySelector("input[name='password']").value
+    }
+
+    let request = await fetch(`http://localhost:8080/api/profiles/login`,{
+        method:"POST",
+        body:JSON.stringify(data),
+        headers: new Headers({"content-type":"application/json"})
+    });
+    let data = await request.json();
+    if(data){
+        swal("Login correcto","Te has logueado correctamente! Enhorabuena!","success");
+    }else{
+        swal("Login incorrecto","Ups... Lo sentimos has puesto mal los datos o no estas registrado. Vuelvo a intentar","warning");
+    }
+}
+
 const register=()=>{
     containerRegister.style="display:block";
     document.body.style = "overflow:hidden";
@@ -241,6 +260,7 @@ const events=async()=>{
     });
     coursesList.addEventListener("click",showTheme);
     containerRegister.querySelector("input[type='button']").addEventListener("click",await sendRegister);
+    containerLogin.querySelector("input[type='button']").addEventListener("click",await sendLogin);
 }
 
 function filterCourse(e){
