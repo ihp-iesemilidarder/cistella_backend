@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="css/skeleton.css">
     <link rel="stylesheet" href="css/custom.css">
     <script src="https://kit.fontawesome.com/fd78996b80.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -47,7 +48,10 @@
                     </ul>
                 </div>
                 <div class="two columns u-pull-right">
-                    <i class="fas fa-sign-in-alt" title="login"></i>
+                    <i class="fas fa-sign-in-alt" title="login" id="login"></i>
+                </div>
+                <div class="two columns u-pull-right">
+                    <i class="fas fa-user" title="register" id="register"></i>
                 </div>
             </div>
         </div>
@@ -135,6 +139,23 @@
             <label for="exampleMessage">Password</label>
             <input type="password" class="u-full-width" placeholder="password" name="password" id="password">
             <input class="button-primary" type="submit" value="Submit">            
+        </div>
+      </form>
+
+      <form id="registerForm">
+        <div class="row">
+            <i class="fas fa-times"></i>
+            <label for="exampleMessage">Nombre</label>
+            <input type="text" class="u-full-width" placeholder="nombre" name="name" id="name" required>
+            <label for="exampleMessage">Apellidos</label>
+            <input type="text" class="u-50-width" placeholder="primer apellido" name="surname1" id="surname1" required>
+            <input type="text" class="u-50-width" placeholder="segundo apellido" name="surname2" id="surname2" required>
+            <label for="exampleMessage">Nick</label>
+            <input type="text" class="u-full-width" placeholder="usuario" name="user" id="newUser" required>
+            <label for="exampleMessage">Contraseña</label>
+            <input type="password" class="u-full-width" placeholder="contraseña" name="password" id="newPassword" required>
+            <input type="password" class="u-full-width" placeholder="repetir contraseña" name="againPassword" id="againPassword" required>
+            <input class="button-primary" type="button" value="Registrarse">            
         </div>
       </form>
 

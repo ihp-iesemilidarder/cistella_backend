@@ -20,7 +20,7 @@ h4 {
 
 /* HEADER */
 /*--------------------------*/
-.fa-sign-in-alt{
+.fa-sign-in-alt,header .fa-user{
   font-size: 2em;
   color:#717171;
   cursor:pointer;
@@ -259,7 +259,7 @@ ul {
   margin: 10px 0;
 }
 
-/* Login form */
+/* forms */
 @keyframes animation-login-start {
   0%{
     opacity: 0;
@@ -270,7 +270,7 @@ ul {
     top: 10%;
   }
 }
-form#loginForm, div#themeCourse{
+form#loginForm, div#themeCourse,form#registerForm{
   display: none;
   z-index: 10;
   padding: 5%;
@@ -285,7 +285,7 @@ form#loginForm, div#themeCourse{
   animation-name: animation-login-start;
   animation-duration: .5s;
 }
-form#loginForm i.fa-times,div#themeCourse i.fa-times{
+form#loginForm i.fa-times,div#themeCourse i.fa-times,form#registerForm i.fa-times{
   font-size: 2em;
   color: #e0696d;
   position: absolute;

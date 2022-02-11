@@ -10,4 +10,6 @@ public interface ITeachersService {
 	Teacher recuperar (int idTeacher);
 	void guardar(Teacher teacher);
 	void eliminar(int idTeacher);
+	Teacher buscarPorNombreApellidos(String name,String surname1,String surname2);
+	void eliminarTodos();
 }

@@ -36,5 +36,12 @@ public class TeachersService implements ITeachersService {
 	public void eliminar(int idTeacher) {
 		repoTeachers.deleteById(idTeacher);
 	}
-
+	
+	public void eliminarTodos() {
+		repoTeachers.deleteAll();
+	}
+	
+	public Teacher buscarPorNombreApellidos(String name,String surname1,String surname2) {
+		return repoTeachers.findByNameAndSurnames(name, surname1, surname2);
+	}
 }

@@ -1,5 +1,7 @@
 package edu.asix.api.entity;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Table(name="teacher")
-public class Teacher {
+public class Teacher{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="tea_id")
@@ -30,7 +32,7 @@ public class Teacher {
 	private String teaSurname1;
 	@Column(name="tea_surname2")
 	private String teaSurname2;
-	
+
 	public int getTeaId() {
 		return teaId;
 	}

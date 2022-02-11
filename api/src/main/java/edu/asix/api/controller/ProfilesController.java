@@ -1,5 +1,6 @@
 package edu.asix.api.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,9 +40,29 @@ public class ProfilesController {
 	}
 	
 	@PostMapping("/profiles") 
-	public Profile insertar(@RequestBody Profile profile) {
-		serviceProfiles.guardar(profile);
-		return profile;
+	public Object insertar(@RequestBody Profile profile) {
+		HashMap<String,String> result = new HashMap<String,String>();
+		try {
+			result.put("title", "Ups...");
+			result.put("type", "warning");
+			if(profile.getProUsername().length()==0) {
+				result.put("text", "Falta rellenar el nick");
+				return result;
+			}else if(profile.getProPassword().length()==0) {
+				result.put("text", "Falta rellenar la contraseña");
+				return result;
+			}
+			serviceProfiles.guardar(profile);
+			result.put("type", "success");
+			result.put("title", "Registrado correctamente");
+			result.put("text", "Bien!!! Te has registrado!!");
+			return result;
+		}catch(Exception e){
+			result.put("type", "error");
+			result.put("title", "Error inesperado");
+			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
+			return result;
+		}
 	}
 	
 	@PutMapping("/profiles")
@@ -54,5 +75,11 @@ public class ProfilesController {
 	public String eliminar(@PathVariable("id") int idProfile) {
 		serviceProfiles.eliminar(idProfile);
 		return "Registro Eliminado";
+	}
+	
+	@DeleteMapping("/profiles/all")
+	public String eliminarTodos() {
+		serviceProfiles.eliminarTodos();
+		return "Registros Eliminados";
 	}
 }

@@ -38,4 +38,8 @@ public class ProfilesService implements IProfilesService {
 		repoProfiles.deleteById(teacher);
 	}
 
+	public void eliminarTodos() {
+		repoProfiles.deleteAll();
+	}
+
 }

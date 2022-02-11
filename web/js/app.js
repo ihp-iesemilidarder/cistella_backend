@@ -4,11 +4,14 @@ let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
 const Trolley = document.querySelector("#lista-carrito > tbody");
 const numTrolley = document.querySelector("#num-cursos");
 const buttonEmptyTrolley = document.querySelector("#vaciar-carrito");
-const buttonLogin = document.querySelector("i.fa-sign-in-alt");
-const containerForm = document.querySelector("form#loginForm");
+const buttonLogin = document.querySelector("i#login");
+const containerLogin = document.querySelector("form#loginForm");
+const containerRegister = document.querySelector("form#registerForm");
 const containerTheme = document.querySelector("div#themeCourse");
 const closeTheme = containerTheme.querySelector("i.fa-times");
-const closeForm = containerForm.querySelector("i.fa-times");
+const closeLogin = containerLogin.querySelector("i.fa-times");
+const closeRegister = containerRegister.querySelector("i.fa-times");
+const buttonRegister = document.querySelector("i#register")
 
 const emptyTrolley=(e) => {
     e.preventDefault();
@@ -156,14 +159,75 @@ const showTheme=(e)=>{
     containerTheme.style="display:block";
 }
 
-const events=()=>{
+const postTeacher=async(teacher)=>{
+    let request = await fetch("http://localhost:8080/api/teachers",{
+        method:"POST",
+        headers:new Headers({"content-type":"application/json"}),
+        body:JSON.stringify(teacher)
+    });
+    return await request.json(); 
+}
+
+const postProfile=async(teacher,profile)=>{
+    let body = {
+        proPassword:profile.proPassword,
+        proUsername:profile.proUsername
+    }
+    let requestTeacher = await fetch(`http://localhost:8080/api/teachers/search/${teacher.teaName}/${teacher.teaSurname1}/${teacher.teaSurname2}`);
+    let teacherComplete = await requestTeacher.json();
+    body.teacher = teacherComplete;
+    body.id = teacherComplete.teaId;
+    console.log(body);
+    let requestProfile = await fetch("http://localhost:8080/api/profiles",{
+        method:"POST",
+        body: JSON.stringify(body),
+        headers: new Headers({"content-type":"application/json"})
+    })
+    return await requestProfile.json();
+}
+
+const fetchsRegister=async(data)=>{
+    let teacher = await postTeacher(data.teacher);
+    if(teacher!=true) return swal(teacher.title,teacher.text,teacher.type);
+    let profile = await postProfile(data.teacher,data.profile);
+    if(profile!=true) return swal(profile.title,profile.text,profile.type);
+}
+
+const sendRegister=async()=>{
+    formData = {
+        teacher:{
+            teaName:containerRegister.querySelector('input[name="name"]').value,
+            teaSurname1:containerRegister.querySelector('input[name="surname1"]').value,
+            teaSurname2:containerRegister.querySelector('input[name="surname2"]').value            
+        },
+        profile:{
+            proUsername:containerRegister.querySelector('input[name="user"]').value,
+            proPassword:containerRegister.querySelector('input[name="password"]').value,            
+        }
+    }
+    let againPassword = containerRegister.querySelector('input[name="againPassword"]').value;
+    if(formData.teacher.teaName.length==0 && formData.teacher.teaName.length==0 && formData.teacher.teaName.length==0 && formData.teacher.teaName.length==0
+        && formData.teacher.teaName.length==0 && formData.teacher.teaName.length==0){
+        return swal("Ups...","Los campos estan vacios","warning");
+    }else if(againPassword!=formData.profile.proPassword){
+        return swal("Ups...", "Las contraseñas no coinciden", "warning");
+    }
+    await fetchsRegister(formData);
+}
+
+const register=()=>{
+    containerRegister.style="display:block";
+    document.body.style = "overflow:hidden";
+}
+
+const events=async()=>{
     search.addEventListener("keyup",filterCourse);
     coursesList.addEventListener("click",addCourse);
     Trolley.addEventListener("click",deleteCourse);
     buttonEmptyTrolley.addEventListener("click",emptyTrolley);
     buttonLogin.addEventListener("click",login);
-    
-    closeForm.addEventListener("click",(e)=>{
+    buttonRegister.addEventListener("click",register);
+    closeLogin.addEventListener("click",(e)=>{
         e.target.parentNode.parentNode.removeAttribute("style");
         document.body.removeAttribute("style");
     });
@@ -171,7 +235,12 @@ const events=()=>{
         e.target.parentNode.removeAttribute("style");
         document.body.removeAttribute("style");
     });
+    closeRegister.addEventListener("click",(e)=>{
+        e.target.parentNode.parentNode.removeAttribute("style");
+        document.body.removeAttribute("style");
+    });
     coursesList.addEventListener("click",showTheme);
+    containerRegister.querySelector("input[type='button']").addEventListener("click",await sendRegister);
 }
 
 function filterCourse(e){
@@ -247,14 +316,14 @@ const loadCourses=async(type, text)=>{
 }
 
 function login(){
-    containerForm.style="display:block";
+    containerLogin.style="display:block";
     document.body.style = "overflow:hidden";
 }
 
 const init=async()=> {
     loadTrolley();
     await loadCourses();
-    events();
+    await events();
 }
 
 init();
