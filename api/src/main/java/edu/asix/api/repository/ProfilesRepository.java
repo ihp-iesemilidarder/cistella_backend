@@ -17,4 +17,6 @@ public interface ProfilesRepository extends JpaRepository<Profile, Integer> {
 	@Query(value="DELETE FROM profile",
 			   nativeQuery=true)
 	public void deleteAll();
+
+	public Profile findByProUsername(String username);
 }

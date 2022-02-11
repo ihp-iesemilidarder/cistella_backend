@@ -216,21 +216,21 @@ const sendRegister=async()=>{
 }
 
 const sendLogin=async()=>{
-    data = {
+    let fields = {
         username:containerLogin.querySelector("input[name='user']").value,
         password:containerLogin.querySelector("input[name='password']").value
     }
 
     let request = await fetch(`http://localhost:8080/api/profiles/login`,{
         method:"POST",
-        body:JSON.stringify(data),
+        body:JSON.stringify(fields),
         headers: new Headers({"content-type":"application/json"})
     });
     let data = await request.json();
     if(data){
         swal("Login correcto","Te has logueado correctamente! Enhorabuena!","success");
     }else{
-        swal("Login incorrecto","Ups... Lo sentimos has puesto mal los datos o no estas registrado. Vuelvo a intentar","warning");
+        swal("Ups...","Lo sentimos has puesto mal los datos o no estas registrado. Vuelvo a intentar","warning");
     }
 }
 
@@ -247,6 +247,7 @@ const events=async()=>{
     buttonLogin.addEventListener("click",login);
     buttonRegister.addEventListener("click",register);
     closeLogin.addEventListener("click",(e)=>{
+        containerLogin.reset();
         e.target.parentNode.parentNode.removeAttribute("style");
         document.body.removeAttribute("style");
     });
@@ -255,6 +256,7 @@ const events=async()=>{
         document.body.removeAttribute("style");
     });
     closeRegister.addEventListener("click",(e)=>{
+        containerRegister.reset();
         e.target.parentNode.parentNode.removeAttribute("style");
         document.body.removeAttribute("style");
     });

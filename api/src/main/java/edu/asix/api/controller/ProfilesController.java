@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lambdaworks.crypto.SCryptUtil;
 
+import edu.asix.api.classes.Login;
 import edu.asix.api.entity.Profile;
 import edu.asix.api.entity.Teacher;
 import edu.asix.api.service.IProfilesService;
@@ -86,5 +87,10 @@ public class ProfilesController {
 	public String eliminarTodos() {
 		serviceProfiles.eliminarTodos();
 		return "Registros Eliminados";
+	}
+	
+	@PostMapping("/profiles/login") 
+	public Boolean login(@RequestBody Login login) {
+		return serviceProfiles.login(login);
 	}
 }

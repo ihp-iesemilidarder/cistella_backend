@@ -1,12 +1,14 @@
 package edu.asix.api.service.jpa;
+import com.lambdaworks.crypto.SCryptUtil;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import edu.asix.api.classes.Login;
 import edu.asix.api.entity.Profile;
 import edu.asix.api.entity.Teacher;
 import edu.asix.api.repository.ProfilesRepository;
@@ -40,6 +42,21 @@ public class ProfilesService implements IProfilesService {
 
 	public void eliminarTodos() {
 		repoProfiles.deleteAll();
+	}
+	
+	public Boolean login(Login login) {
+		try {
+			String username = login.getUsername();
+			String password = login.getPassword();
+			Profile user = repoProfiles.findByProUsername(username);
+			Boolean check = SCryptUtil.check(password, user.getProPassword());
+			if(check==true) {
+				return true;
+			}
+			return false;			
+		}catch(Exception e) {
+			return false;
+		}
 	}
 
 }
