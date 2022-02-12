@@ -82,7 +82,6 @@ public class ProfilesController {
 		serviceProfiles.eliminar(idProfile);
 		return "Registro Eliminado";
 	}
-	
 	@DeleteMapping("/profiles/all")
 	public String eliminarTodos() {
 		serviceProfiles.eliminarTodos();

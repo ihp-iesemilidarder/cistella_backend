@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 
 import edu.asix.api.entity.Teacher;
+import edu.asix.api.repository.ProfilesRepository;
 import edu.asix.api.repository.TeachersRepository;
 import edu.asix.api.service.ITeachersService;
 

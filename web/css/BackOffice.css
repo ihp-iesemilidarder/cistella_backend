@@ -1,4 +1,4 @@
-/*container teachers*/
+/*container admin*/
 @keyframes animation-admin-start {
     0%{
       opacity: 0;
@@ -7,7 +7,7 @@
       opacity: 1;
     }
 }
-div#containerTeachers{
+div#containerAdmin{
     display: none;
     position: fixed;
     left: 0;
@@ -17,8 +17,39 @@ div#containerTeachers{
     background-color: white;
     z-index: 10;
     margin: 5%;
+    padding: 5%;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0,0,0,.5);
     animation-name: animation-admin-start;
     animation-duration: .5s;
+    overflow: auto;
+}
+div#containerAdmin h3{
+    text-align: center;
+    border-bottom: 2px solid black;
+    background:rgba(128, 128, 128,.2);
+    border-radius: 10px;
+}
+div#containerAdmin i.fa-times{
+    font-size: 2em;
+    color: #e0696d;
+    cursor: pointer;
+    position: absolute;
+    margin: 2% 3%;
+    right: 0;
+    top:0;
+}
+
+div#containerAdmin table .actions{
+    font-size: 1.5em;
+    display: flex;
+    justify-content: space-between;
+}
+div#containerAdmin table .actions .fa-trash{
+    color:rgb(247, 76, 76);
+    cursor: pointer;
+}
+div#containerAdmin table .actions .fa-edit{
+    color:rgb(41, 44, 243);
+    cursor: pointer;
 }
