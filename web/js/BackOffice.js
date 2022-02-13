@@ -1,15 +1,16 @@
 import {getCookie} from './Utils.js';
-
+import {coursesList} from "./FrontOffice.js";
 const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
 const headerButtons = document.querySelector("header .row");
 
-const showButtons=()=>{
+const showButtonsAdmin=()=>{
     buttonsAdmin.innerHTML+=`
         <button id="profesores">Profesores</button>
         <button id="categorias">Categorias</button>
         <button id="usuarios">Usuarios</button>
     `;
+
 }
 
 const printColumnsTable=(keys)=>{
@@ -150,7 +151,8 @@ const eventsButtons=async(e)=>{
 
 export const BackOffice=async()=>{
     if(getCookie("username")==undefined) return null;
-    showButtons();
+    showButtonsAdmin();
+    showButtonsDeleteCourses();
     containerAdmin.addEventListener("click",eventsAdmin);
     buttonsAdmin.addEventListener("click",await eventsButtons);
 }

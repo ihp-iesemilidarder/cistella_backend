@@ -221,6 +221,14 @@ ul {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   
 }
+.card .eliminar-curso:hover{
+  background-color: #db1e1e;
+  border-color: #db1e1e;
+}
+.card .eliminar-curso{
+  background-color: #f03333;
+  border-color: #f03333;
+}
 .card {
   text-align: center;
   border: 1px solid #e1e1e1;

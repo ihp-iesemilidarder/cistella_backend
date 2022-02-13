@@ -1,6 +1,6 @@
 import { DateOperators } from "./Utils.js";
 import { BackOffice } from "./BackOffice.js";
-const coursesList = document.querySelector("#list-content");
+export const coursesList = document.querySelector("#list-content");
 const search = document.querySelector("#buscador");
 let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
 const Trolley = document.querySelector("#lista-carrito > tbody");
@@ -323,6 +323,10 @@ function printCourses(data) {
                     <input type="text" placeholder="descuento" id="descuento">
                     <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.couId}">Ver temario</a>
                     <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
+                    <span>
+                        <a href="#" class="u-full-width button-primary button input editar-curso" data-id="${ob.couId}">Editar Curso</a>
+                        <a href="#" class="u-full-width button-primary button input eliminar-curso" data-id="${ob.couId}">Eliminar Curso</a>
+                    </span>
                     <p class="type">${ob.category}</p>
                     <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.couDateStart}</i><i class="fas fa-clock"> ${ob.couScheduleStart}H</i></p>
                     <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.couDateFinish}</i><i class="fas fa-stopwatch"> ${ob.couDuration}H</i></p>
