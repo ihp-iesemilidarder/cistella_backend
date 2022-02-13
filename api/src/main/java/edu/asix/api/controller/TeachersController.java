@@ -65,27 +65,27 @@ public class TeachersController {
 	@PostMapping("/teachers") 
 	public Object insertar(@RequestBody Teacher teacher) {
 		HashMap<String,String> result = new HashMap<String,String>();
-		try {
+		//try {
 			result.put("title", "Ups...");
 			result.put("type", "warning");
-			if(teacher.getTeaName().length()==0) {
+			if(teacher.getName().length()==0) {
 				result.put("text", "Falta rellenar el nombre");
 				return result;
-			}else if(teacher.getTeaSurname1().length()==0) {
+			}else if(teacher.getFirstSurname().length()==0) {
 				result.put("text", "Falta rellenar el primer apellido");
 				return result;
-			}else if(teacher.getTeaSurname2().length()==0) {
+			}else if(teacher.getSecondSurname().length()==0) {
 				result.put("text", "Falta rellenar el segundo apellido");
 				return result;
 			}
 			serviceTeachers.guardar(teacher);
 			return true;
-		}catch(Exception e){
+		/*}catch(Exception e){
 			result.put("type", "error");
 			result.put("title", "Error inesperado");
 			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
 			return result;
-		}
+		}*/
 	}
 	
 	@PutMapping("/teachers")

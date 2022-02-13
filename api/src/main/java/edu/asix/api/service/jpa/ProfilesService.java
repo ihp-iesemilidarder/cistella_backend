@@ -46,10 +46,10 @@ public class ProfilesService implements IProfilesService {
 	
 	public Boolean login(Login login) {
 		try {
-			String username = login.getUsername();
-			String password = login.getPassword();
-			Profile user = repoProfiles.findByProUsername(username);
-			Boolean check = SCryptUtil.check(password, user.getProPassword());
+			String username = login.getLoginUsername();
+			String password = login.getLoginPassword();
+			Profile user = repoProfiles.findByUsername(username);
+			Boolean check = SCryptUtil.check(password, user.getPassword());
 			if(check==true) {
 				return true;
 			}

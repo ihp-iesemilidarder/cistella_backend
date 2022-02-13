@@ -18,5 +18,5 @@ public interface ProfilesRepository extends JpaRepository<Profile, Integer> {
 			   nativeQuery=true)
 	public void deleteAll();
 
-	public Profile findByProUsername(String username);
+	public Profile findByUsername(String username);
 }

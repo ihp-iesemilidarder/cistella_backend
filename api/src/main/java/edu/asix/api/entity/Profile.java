@@ -33,10 +33,10 @@ public class Profile {
 	private Teacher teacher;
 	
 	@Column(name="pro_password")
-	private String proPassword;
+	private String password;
 	
 	@Column(name="pro_username")
-	private String proUsername;
+	private String username;
 
 	public int getId() {
 		return id;
@@ -54,26 +54,26 @@ public class Profile {
 		this.teacher = teacher;
 	}
 
-	public String getProPassword() {
-		return proPassword;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setProPassword(String proPassword) {
-		this.proPassword = proPassword;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public String getProUsername() {
-		return proUsername;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setProUsername(String proUsername) {
-		this.proUsername = proUsername;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	@Override
 	public String toString() {
-		return "Profile [id=" + id + ", teacher=" + teacher + ", proPassword=" + proPassword + ", proUsername="
-				+ proUsername + "]";
+		return "Profile [id=" + id + ", teacher=" + teacher + ", password=" + password + ", username=" + username + "]";
 	}
+	
 
 }

@@ -2,6 +2,7 @@ import {getCookie} from './Utils.js';
 
 const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
+const headerButtons = document.querySelector("header .row");
 
 const showButtons=()=>{
     buttonsAdmin.innerHTML+=`
@@ -11,58 +12,75 @@ const showButtons=()=>{
     `;
 }
 
-const showItemsTeachers=(list)=>{
+const printColumnsTable=(keys)=>{
     let output = "";
-    list.forEach(el=>{
-        output+=`
-            <tr>
-                <td>${el.teaName}</td>
-                <td>${el.teaSurname1}</td>
-                <td>${el.teaSurname2}</td>
-                <td class="actions">
-                    <i class="fas fa-trash" data-id="${el.teaId}"></i>
-                    <i class="fas fa-edit" data-id="${el.teaId}"></i>
-                </td>
-            </tr>
-        `;
+    keys.forEach(key=>{
+        if(key!="id"){
+            output+=`
+                <th>${key.replace(new RegExp("[A-Z]")," $&")}</th>
+            `;            
+        }
     });
     return output;
 }
 
-const showItemsCategories=(list)=>{
-    let output = "";
-    list.forEach(el=>{
+const printValuesTable=(values)=>{
+    let output="";
+    values.forEach(el=>{
+        output+="<tr>";
+        let value = Object.values(el);
+        let id = value[0];
+        if(typeof id == "number") delete value[0];
+        value.forEach(el=>{
+            output+=`<td>${el}</td>`;
+        });
         output+=`
-            <tr>
-                <td>${el.catName}</td>
-                <td class="actions">
-                    <i class="fas fa-trash" data-id="${el.catName}"></i>
-                    <i class="fas fa-edit" data-id="${el.catName}"></i>
-                </td>
-            </tr>
+            <td class="icons" style="font-size: 1.5em;display: flex;justify-content: space-between;">
+                <i class="fas fa-edit" data-id="${id}" style="color:rgb(41, 44, 243);cursor: pointer;"></i>
+                <i class="fas fa-trash" data-id="${id}" style="color:rgb(247, 76, 76);cursor: pointer;"></i>
+            </td>
         `;
+        output+="</tr>";
     });
     return output;
 }
 
 const deleteItemTable=(dom)=>{
-    if(containerAdmin.dataset.table=="teachers"){
-        fetch(`http://localhost:8080/api/profiles/${dom.id}`,{
-            method:"DELETE",
-            body:JSON.stringify({proId:dom.id}),
-            headers: {
-            'content-type' : 'application/json'
+    try{
+        swal({
+            title: "¿Estas seguro que quieres eliminarlo?",
+            text: "Al aceptar eliminarás el registro y no habrá vuelta atras.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,                  
+        }).then(ok=>{
+            if(ok){
+                fetch(`http://localhost:8080/api/${containerAdmin.dataset.table}/${dom.dataset.id}`,{
+                    method:"DELETE",
+                    headers: {
+                        'Access-Control-Allow-Origin':'*'
+                    }
+                }).then(el=>{
+                    if(el.status==500){
+                        swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+                    }else{
+                        dom.parentNode.parentNode.remove();
+                    }
+                });
+            }else{
+                swal({
+                    title:"ufff...",
+                    text:"menos mal que no lo he eliminado.",
+                    buttons:false
+                });
+                return false;
             }
         });
+
+                
+    }catch{
+        
     }
-    fetch(`http://localhost:8080/api/${containerAdmin.dataset.table}/${dom.id}`,{
-        method:"DELETE",
-        body:JSON.stringify({proId:dom.id}),
-        headers: {
-            'content-type' : 'application/json'
-        }
-    });
-    dom.parentNode.parentNode.remove();
 }
 
 const eventsAdmin=(e)=>{
@@ -75,66 +93,58 @@ const eventsAdmin=(e)=>{
     }
 }
 
-const showTeachers=(teachers)=>{
-    containerAdmin.style.display="block";
-    containerAdmin.innerHTML=`
-        <i class="fas fa-times"></i>
-        <h3>Teachers</h3>
+const printTable=(data)=>{
+    if(data.length==0) return "Table empty";
+    let output=[];
+    data.map(el=>{
+        if(el.teacher) delete el["teacher"];
+        if(el.password) delete el["password"];
+        output.push(el);
+    });
+    console.log(output);
+    let keys = Object.keys(output[0]);
+    let values = Object.values(output);
+    return `
         <table class="u-full-width">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Primer apellido</th>
-            <th>Segundo apellido</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-            ${showItemsTeachers(teachers)}
-        </tbody>
-      </table>
+            <thead>
+                <tr>
+                    ${printColumnsTable(keys)}
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${printValuesTable(values)}
+            </tbody>
+        </table>
     `;
 }
 
-const showCategories=(categories)=>{
+const showData=(data,table)=>{
     containerAdmin.style.display="block";
     containerAdmin.innerHTML=`
         <i class="fas fa-times"></i>
-        <h3>Categories</h3>
-        <table class="u-full-width">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-            ${showItemsCategories(categories)}
-        </tbody>
-      </table>
-    `;
+        <h3>${table}</h3>
+        ${printTable(data)}
+    `
 }
 
-const loadTeachers=async()=>{
-    let request = await fetch('http://localhost:8080/api/teachers');
+const loadTable=async(table)=>{
+    let request = await fetch(`http://localhost:8080/api/${table}`);
     let data = await request.json();
-    showTeachers(data);
-}
-
-const loadCategories=async()=>{
-    let request = await fetch('http://localhost:8080/api/categories');
-    let data = await request.json();
-    showCategories(data);
+    showData(data,table);
 }
 
 const eventsButtons=async(e)=>{
     let dom = e.target;
     if(dom.nodeName=="BUTTON" && dom.id=="profesores"){
         containerAdmin.dataset.table="teachers";
-        await loadTeachers();
+        await loadTable("teachers");
     }else if(dom.nodeName=="BUTTON" && dom.id=="categorias"){
         containerAdmin.dataset.table="categories";
-        await loadCategories();
+        await loadTable("categories");
+    }else if(dom.nodeName=="BUTTON" && dom.id=="usuarios"){
+        containerAdmin.dataset.table="profiles";
+        await loadTable("profiles");
     }
 }
 

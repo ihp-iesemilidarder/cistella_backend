@@ -1,28 +1,28 @@
 package edu.asix.api.classes;
 
 public class Login {
-	private String username;
-	private String password;
-	public Login(String username, String password) {
+	private String loginLoginUsername;
+	private String loginLoginPassword;
+	public Login(String loginLoginUsername, String loginLoginPassword) {
 		super();
-		this.username = username;
-		this.password = password;
+		this.loginLoginUsername = loginLoginUsername;
+		this.loginLoginPassword = loginLoginPassword;
 	}
-	public String getUsername() {
-		return username;
+	public String getLoginUsername() {
+		return loginLoginUsername;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public void setLoginUsername(String loginLoginUsername) {
+		this.loginLoginUsername = loginLoginUsername;
 	}
-	public String getPassword() {
-		return password;
+	public String getLoginPassword() {
+		return loginLoginPassword;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setLoginPassword(String loginLoginPassword) {
+		this.loginLoginPassword = loginLoginPassword;
 	}
 	@Override
 	public String toString() {
-		return "Login [username=" + username + ", password=" + password + "]";
+		return "Login [loginLoginUsername=" + loginLoginUsername + ", loginLoginPassword=" + loginLoginPassword + "]";
 	}
 	
 	

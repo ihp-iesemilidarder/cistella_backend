@@ -14,19 +14,19 @@ import javax.persistence.Table;
 public class Category {
 	@Id
 	@Column(name="cat_name",columnDefinition="VARCHAR(50)")
-	private java.lang.String catName;
+	private String name;
 
-	public String getCatName() {
-		return catName;
+	public String getName() {
+		return name;
 	}
 
-	public void setCatName(String catName) {
-		this.catName = catName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "Category [catName=" + catName + "]";
+		return "Category [name=" + name + ", getName()=" + getName() + ", getClass()=" + getClass() + ", hashCode()="
+				+ hashCode() + ", toString()=" + super.toString() + "]";
 	}
-	
 }

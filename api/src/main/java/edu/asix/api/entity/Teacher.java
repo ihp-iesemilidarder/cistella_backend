@@ -25,46 +25,40 @@ public class Teacher{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="tea_id")
-	private int teaId;
+	private int id;
 	@Column(name="tea_name")
-	private String teaName;
+	private String name;
 	@Column(name="tea_surname1")
-	private String teaSurname1;
+	private String firstSurname;
 	@Column(name="tea_surname2")
-	private String teaSurname2;
-
-	public int getTeaId() {
-		return teaId;
+	private String secondSurname;
+	public int getId() {
+		return id;
 	}
-	public void setTeaId(int teaId) {
-		this.teaId = teaId;
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getTeaName() {
-		return teaName;
+	public String getName() {
+		return name;
 	}
-	public void setTeaName(String teaName) {
-		this.teaName = teaName;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getTeaSurname1() {
-		return teaSurname1;
+	public String getFirstSurname() {
+		return firstSurname;
 	}
-	public void setTeaSurname1(String teaSurname1) {
-		this.teaSurname1 = teaSurname1;
+	public void setFirstSurname(String firstSurname) {
+		this.firstSurname = firstSurname;
 	}
-	public String getTeaSurname2() {
-		return teaSurname2;
+	public String getSecondSurname() {
+		return secondSurname;
 	}
-	public void setTeaSurname2(String teaSurname2) {
-		this.teaSurname2 = teaSurname2;
-	}
-	@Override
-	public String toString() {
-		return "Teacher [teaId=" + teaId + ", teaName=" + teaName + ", teaSurname1=" + teaSurname1 + ", teaSurname2="
-				+ teaSurname2 +"]";
+	public void setSecondSurname(String secondSurname) {
+		this.secondSurname = secondSurname;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(teaId);
+		return Objects.hash(firstSurname, id, name, secondSurname);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -75,7 +69,12 @@ public class Teacher{
 		if (getClass() != obj.getClass())
 			return false;
 		Teacher other = (Teacher) obj;
-		return teaId == other.teaId;
+		return Objects.equals(firstSurname, other.firstSurname) && id == other.id && Objects.equals(name, other.name)
+				&& Objects.equals(secondSurname, other.secondSurname);
 	}
-	
+	@Override
+	public String toString() {
+		return "Teacher [id=" + id + ", name=" + name + ", firstSurname=" + firstSurname + ", secondSurname="
+				+ secondSurname + "]";
+	}
 }

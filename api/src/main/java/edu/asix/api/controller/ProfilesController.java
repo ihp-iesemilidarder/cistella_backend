@@ -45,30 +45,30 @@ public class ProfilesController {
 	@PostMapping("/profiles") 
 	public Object insertar(@RequestBody Profile profile) {
 		HashMap<String,String> result = new HashMap<String,String>();
-		try {
+		//try {
 			result.put("title", "Ups...");
 			result.put("type", "warning");
-			if(profile.getProUsername().length()==0) {
+			if(profile.getUsername().length()==0) {
 				result.put("text", "Falta rellenar el nick");
 				return result;
-			}else if(profile.getProPassword().length()==0) {
+			}else if(profile.getPassword().length()==0) {
 				result.put("text", "Falta rellenar la contraseña");
 				return result;
 			}
-			String  originalPassword = profile.getProPassword().toString();
+			String  originalPassword = profile.getPassword().toString();
 			String generatedSecuredPasswordHash = SCryptUtil.scrypt(originalPassword, 16, 16, 16);
-			profile.setProPassword(generatedSecuredPasswordHash);
+			profile.setPassword(generatedSecuredPasswordHash);
 			serviceProfiles.guardar(profile);
 			result.put("type", "success");
 			result.put("title", "Registrado correctamente");
 			result.put("text", "Bien!!! Te has registrado!!");
 			return result;
-		}catch(Exception e){
+		/*}catch(Exception e){
 			result.put("type", "error");
 			result.put("title", "Error inesperado");
 			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
 			return result;
-		}
+		}*/
 	}
 	
 	@PutMapping("/profiles")
