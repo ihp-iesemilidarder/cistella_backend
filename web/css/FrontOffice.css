@@ -20,7 +20,7 @@ h4 {
 
 /* HEADER */
 /*--------------------------*/
-.fa-sign-in-alt,header .fa-user{
+.fa-sign-in-alt,header .fa-user,.fa-sign-out-alt{
   font-size: 2em;
   color:#717171;
   cursor:pointer;

@@ -6,7 +6,7 @@ let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
 const Trolley = document.querySelector("#lista-carrito > tbody");
 const numTrolley = document.querySelector("#num-cursos");
 const buttonEmptyTrolley = document.querySelector("#vaciar-carrito");
-const buttonLogin = document.querySelector("i#login");
+const header = document.querySelector("header .row");
 const buttonRegister = document.querySelector("i#icon-register");
 const containerLogin = document.querySelector("form#loginForm");
 const containerRegister = document.querySelector("form#registerForm");
@@ -179,7 +179,6 @@ const postProfile=async(teacher,profile)=>{
     let teacherComplete = await requestTeacher.json();
     body.teacher = teacherComplete;
     body.id = teacherComplete.id;
-    console.log(body);
     let requestProfile = await fetch("http://localhost:8080/api/profiles",{
         method:"POST",
         body: JSON.stringify(body),
@@ -230,7 +229,7 @@ const sendLogin=async()=>{
     });
     let data = await request.json();
     if(data){
-        document.cookie=`username=${fields.username};expires=${new DateOperators().increment(0,0,0,0,30,-1,-1)}`;
+        document.cookie=`username=${fields.loginUsername};expires=${new DateOperators().increment(0,0,0,0,30,-1,-1)}`;
         swal("Login correcto","Te has logueado correctamente! Enhorabuena!","success");
         BackOffice();
     }else{
@@ -249,7 +248,7 @@ const events=async()=>{
     Trolley.addEventListener("click",deleteCourse);
     buttonEmptyTrolley.addEventListener("click",emptyTrolley);
     buttonRegister.addEventListener("click",register);
-    buttonLogin.addEventListener("click",login);
+    header.addEventListener("click",loginLogout);
     closeLogin.addEventListener("click",(e)=>{
         containerLogin.reset();
         e.target.parentNode.parentNode.removeAttribute("style");
@@ -323,10 +322,7 @@ function printCourses(data) {
                     <input type="text" placeholder="descuento" id="descuento">
                     <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.couId}">Ver temario</a>
                     <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
-                    <span>
-                        <a href="#" class="u-full-width button-primary button input editar-curso" data-id="${ob.couId}">Editar Curso</a>
-                        <a href="#" class="u-full-width button-primary button input eliminar-curso" data-id="${ob.couId}">Eliminar Curso</a>
-                    </span>
+                    <span class="admin-card"></span>
                     <p class="type">${ob.category}</p>
                     <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.couDateStart}</i><i class="fas fa-clock"> ${ob.couScheduleStart}H</i></p>
                     <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.couDateFinish}</i><i class="fas fa-stopwatch"> ${ob.couDuration}H</i></p>
@@ -345,9 +341,18 @@ const loadCourses=async(type, text)=>{
     printCourses(data);
 }
 
-function login(){
-    containerLogin.style="display:block";
-    document.body.style = "overflow:hidden";
+const eliminarCookie=(key)=>{
+    return document.cookie = key + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function loginLogout(e){
+    if(e.target.id=="login"){
+        containerLogin.style="display:block";
+        document.body.style = "overflow:hidden";        
+    }else if(e.target.id=="logout"){
+        eliminarCookie("username");
+        swal("Session cerrada","Has salido de la session","info");
+    }
 }
 
 export const FrontOffice=async()=> {
