@@ -1,5 +1,5 @@
 import { DateOperators } from "./Utils.js";
-import { BackOffice } from "./BackOffice.js";
+import { BackOffice,buttonDelete } from "./BackOffice.js";
 export const coursesList = document.querySelector("#list-content");
 const search = document.querySelector("#buscador");
 let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
@@ -141,16 +141,16 @@ const printSheet=async(id)=>{
     let couxthes = await showListCoursesThemes(id);
     containerTheme.querySelector("div").innerHTML="";
     couxthes.sort((a,b)=>a.order-b.order);
-    console.log(couxthes)
     couxthes.forEach(couxthe=>{
-        console.log(couxthe);
         containerTheme.querySelector("div").innerHTML+=`
             <div>
+                ${buttonDelete(couxthe.id,couxthe.theme.theId)}
                 <h5><font color="red">${couxthe.order}.</font> ${couxthe.theme.theTitle}</h5>
                 <p>${couxthe.theme.theDescription}</p>                
             </div>
         `;
     });
+    if(couxthes.length==0) containerTheme.querySelector("div").innerHTML+="Este curso no tiene temas";
 }
 
 const showTheme=(e)=>{

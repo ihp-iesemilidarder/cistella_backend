@@ -215,6 +215,10 @@ ul {
 
 /* Estilos cursos */
 /* ----------------------------------- */
+.delete-theme{
+  position: relative!important;
+  font-size: 1em!important;
+}
 #list-content{
   display:grid;
   gap:10px;
@@ -280,6 +284,8 @@ ul {
 }
 form#loginForm, div#themeCourse,form#registerForm{
   display: none;
+  max-height: 60%;
+  overflow: auto;
   z-index: 10;
   padding: 5%;
   margin: 3% 15%;

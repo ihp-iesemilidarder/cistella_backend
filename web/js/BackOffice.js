@@ -2,6 +2,7 @@ import {getCookie} from './Utils.js';
 import {coursesList} from "./FrontOffice.js";
 const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
+const containerThemeCourse = document.querySelector("body #themeCourse");
 
 const buttonsTablesAdmin=(action)=>{
     if(action=="show"){
@@ -190,7 +191,7 @@ const getUsername=async(name)=>{
 
 const checkSession=async()=>{
     setInterval(async()=>{
-        let cookieName = document.cookie.split("=")[1];
+        let cookieName = getCookie("username");
         let ok = await getUsername(cookieName);
         if(!ok) adminDelete();
     },2000);
@@ -216,12 +217,49 @@ const buttonLogout=(action)=>{
     }
 }
 
+export const buttonDelete=(id,idTheme)=>{
+    if(getCookie("username")==undefined && getUsername(getCookie("username"))) return "";
+    return `
+        <i class="fas fa-times delete-theme" data-id="${id}" data-idtheme="${idTheme}"></i>
+    `;
+}
+
+const deleteTheme=(dom,id,idTheme)=>{
+    deleteItemTable(()=>{
+        fetch(`http://localhost:8080/api/couxthes/${id}`,{
+            method:"DELETE",
+        }).then(el=>{
+            if(el.status==500){
+                swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+            }else{
+                fetch(`http://localhost:8080/api/themes/${idTheme}`,{
+                    method:"DELETE",
+                }).then(el=>{
+                    if(el.status==500){
+                        swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+                    }else{
+                        dom.parentNode.remove();
+                    }
+                });
+            }
+        });
+    });
+}
+
+const eventsThemesCourse=(e)=>{
+    let dom = e.target;
+    if(dom.classList.contains("delete-theme")){
+        deleteTheme(dom,dom.dataset.id,dom.dataset.idtheme);
+    }
+}
+
 export const BackOffice=async()=>{
-    if(getCookie("username")==undefined) return null;
+    if(getCookie("username")==undefined && getUsername(getCookie("username"))) return null;
     buttonsTablesAdmin("show");
     buttonsDeleteCourses("show");
     buttonLogout("show");
     await checkSession();
+    containerThemeCourse.addEventListener("click",eventsThemesCourse);
     containerAdmin.addEventListener("click",eventsAdmin);
     buttonsAdmin.addEventListener("click",await eventsButtons);
     coursesList.addEventListener("click",await deleteCourse);
