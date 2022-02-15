@@ -10,4 +10,5 @@ public interface ICategoriesService {
 	Category recuperar (String idCategory);
 	void guardar(Category category);
 	void eliminar(String idCategory);
+	void eliminarTodos();
 }

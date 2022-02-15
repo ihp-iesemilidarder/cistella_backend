@@ -57,4 +57,10 @@ public class CoursesController {
 		serviceCourses.eliminar(idCourse);
 		return "Registro Eliminado";
 	}
+	
+	@DeleteMapping("/courses/all")
+	public String eliminarTodos() {
+		serviceCourses.eliminarTodos();
+		return "Registros Eliminados";
+	}
 }

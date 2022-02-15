@@ -53,5 +53,9 @@ public class CoursesService implements ICoursesService {
 	public void eliminar(int idCourse) {
 		repoCourses.deleteById(idCourse);
 	}
+	
+	public void eliminarTodos() {
+		repoCourses.deleteAll();
+	}
 
 }

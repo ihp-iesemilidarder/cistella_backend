@@ -51,4 +51,10 @@ public class CouxthesController {
 		serviceCouxthes.eliminar(id);
 		return "Registro Eliminado";
 	}
+	
+	@DeleteMapping("/couxthes/all")
+	public String eliminarTodos() {
+		serviceCouxthes.eliminarTodos();
+		return "Registros Eliminados";
+	}
 }

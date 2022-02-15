@@ -36,5 +36,9 @@ public class CategoriesService implements ICategoriesService {
 	public void eliminar(String nameCategory) {
 		repoCategories.deleteById(nameCategory);
 	}
+	
+	public void eliminarTodos() {
+		repoCategories.deleteAll();
+	}
 
 }

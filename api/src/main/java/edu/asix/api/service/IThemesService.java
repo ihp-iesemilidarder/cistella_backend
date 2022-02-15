@@ -10,4 +10,5 @@ public interface IThemesService {
 	Theme recuperar (int idTheme);
 	void guardar(Theme theme);
 	void eliminar(int idTheme);
+	void eliminarTodos();
 }

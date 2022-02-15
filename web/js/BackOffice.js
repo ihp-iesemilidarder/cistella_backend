@@ -49,10 +49,10 @@ const printValuesTable=(values)=>{
     return output;
 }
 
-const deleteItemTable=(callback)=>{
+const fetchApi=(callback,title,text)=>{
     swal({
-        title: "¿Estas seguro que quieres eliminarlo?",
-        text: "Al aceptar eliminarás el registro y no habrá vuelta atras.",
+        title: title,
+        text: text,
         icon: "warning",
         buttons: true,
         dangerMode: true,                  
@@ -70,8 +70,7 @@ const deleteItemTable=(callback)=>{
     });
 }
 
-const printOptions=async(table)=>{
-    let output="";
+const printOptions=async(dom,table)=>{
     let request = await fetch(`http://localhost:8080/api/${table}s`);
     let options = await request.json();
     await options.forEach(option=>{
@@ -99,7 +98,10 @@ const printOptions=async(table)=>{
                 id=option.theId;
                 break;
             }
-            output+=`<option value="${id}">${name}</option>`;
+            let element = document.createElement("option");
+            element.value = id;
+            element.textContent = name;
+            dom.appendChild(element);
     });    
     return output;
 }
@@ -111,7 +113,17 @@ const setLabels=async(columns,dom)=>{
         label.textContent=column[0];
         dom.appendChild(label);
         if(column[1]=="select"){
-            null;
+            let select = document.createElement("select");
+            select.name = column[0];
+            select.setAttribute("class","u-full-width");
+            let option = document.createElement("option");
+            option.value=" ";
+            option.innerText=`-- Select a ${column[0]} --`;
+            option.disabled="disabled";
+            option.selected="selected";
+            select.appendChild(option);
+            printOptions(select,column[0]);
+            dom.appendChild(select);
         }else{
             let input = document.createElement("input");
             input.type=column[1];
@@ -141,7 +153,6 @@ const generateForm=async(columns)=>{
         submit.value="Insertar";
         containerAdmin.querySelector("form").appendChild(submit);
     }
-
 }
 
 const changeToForm=async(dom)=>{
@@ -167,6 +178,7 @@ const changeToForm=async(dom)=>{
 const insertDataTable=(table,elements)=>{
     let data = {};
     for(let element of elements){
+        if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
         if(element.value!="Insertar") data[element.name]=element.value;
     }
     try{
@@ -176,12 +188,50 @@ const insertDataTable=(table,elements)=>{
             headers:{
                 "Content-type":"application/json"
             }
-        });
-        swal("Datos insertados correctamente","Los datos fueron insertados correctamente!!","success");        
+        }).then(request=>request.json())
+        .then(data=>{
+            if(data.status==500 || data.statusText){
+                swal("Error inesperado","Error al insertar los datos en la tabla","error");
+            }else{
+                swal("Datos insertados correctamente","Los datos fueron insertados correctamente!!","success");
+            }
+        });        
     }catch{
         swal("Error inesperado","Error al insertar los datos en la tabla","error");
     }
 
+}
+
+const deleteAll=(table,dom)=>{
+    fetchApi(()=>{
+        fetch(`http://localhost:8080/api/${table}/all`,{
+            method:"DELETE",
+        }).then(el=>{
+            if(el.status==500 || el.statusText){
+                swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+            }else{
+                dom.querySelector("table").remove();
+                dom.innerHTML+="<span>Table empty</span>";
+            }
+        });
+    },"¿Estas seguro que quieres eliminar todos los datos de la tabla?","Al aceptar eliminarás todos los registros y no habrá vuelta atras.");
+}
+
+const deleteItem=(table,dom)=>{
+    fetchApi(()=>{
+        fetch(`http://localhost:8080/api/${table}/${dom.dataset.id}`,{
+            method:"DELETE",
+        }).then(el=>{
+            if(el.status==500 || el.statusText){
+                swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+            }else{
+                dom.parentNode.parentNode.remove();
+            }
+        });
+    },"¿Estas seguro que quieres eliminarlo?","Al aceptar eliminarás el registro y no habrá vuelta atras.");    
+    if(table=="profiles"){
+        fetch(`http://localhost:8080/api/teachers/`);
+    }
 }
 
 const eventsAdmin=(e)=>{
@@ -189,18 +239,10 @@ const eventsAdmin=(e)=>{
     if(dom.classList.contains("fa-times")){
         containerAdmin.removeAttribute("style");
         delete containerAdmin.dataset.table;
+    }else if(dom.classList.contains("deleteAll")){
+        deleteAll(containerAdmin.dataset.table,containerAdmin);
     }else if(dom.classList.contains("fa-trash")){
-        deleteItemTable(()=>{
-            fetch(`http://localhost:8080/api/${containerAdmin.dataset.table}/${dom.dataset.id}`,{
-                method:"DELETE",
-            }).then(el=>{
-                if(el.status==500){
-                    swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
-                }else{
-                    dom.parentNode.parentNode.remove();
-                }
-            });
-        });
+        deleteItem(containerAdmin.dataset.table,dom);
     }else if(dom.classList.contains("add-data-table")){
         dom.classList.replace("fa-plus","fa-eye");
         dom.classList.replace("add-data-table","view-data-table");
@@ -229,7 +271,12 @@ const printTable=(data)=>{
             <thead>
                 <tr>
                     ${printColumnsTable(keys)}
-                    <th></th>
+                    <th style="text-align:center;"><i class="fas fa-trash deleteAll" style="
+                        color:rgb(247, 76, 76);
+                        text-content:center;
+                        cursor:pointer;
+                        font-size:1.5em;
+                    "></i></th>
                 </tr>
             </thead>
             <tbody>
@@ -286,17 +333,17 @@ const buttonsDeleteCourses=(action)=>{
 }
 
 const removeCourse=async(dom)=>{
-    deleteItemTable(()=>{
+    fetchApi(()=>{
         fetch(`http://localhost:8080/api/courses/${dom.dataset.id}`,{
             method:"DELETE",
         }).then(el=>{
-            if(el.status==500){
+            if(el.status==500 || el.statusText){
                 swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
             }else{
                 dom.parentNode.parentNode.parentNode.remove();
             }
         });
-    });
+    },"¿Estas seguro que quieres eliminar el curso?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
 const deleteCourse=async(e)=>{
@@ -317,7 +364,7 @@ const checkSession=async()=>{
     setInterval(async()=>{
         let cookieName = getCookie("username");
         let ok = await getUsername(cookieName);
-        if(!ok) adminDelete();
+        if(ok==false) adminDelete();
     },2000);
 }
 
@@ -334,10 +381,12 @@ const buttonLogout=(action)=>{
         login.id="logout";
         login.title="logout";
     }else if(action=="delete"){
-        let logout = document.querySelector("header i#logout");
-        logout.classList.replace("fa-sign-out-alt","fa-sign-in-alt");
-        logout.id="login";
-        logout.title="login";
+        try{
+            let logout = document.querySelector("header i#logout");
+            logout.classList.replace("fa-sign-out-alt","fa-sign-in-alt");
+            logout.id="login";
+            logout.title="login";            
+        }catch{null};
     }
 }
 
@@ -349,17 +398,17 @@ export const buttonDelete=(id,idTheme)=>{
 }
 
 const deleteTheme=(dom,id,idTheme)=>{
-    deleteItemTable(()=>{
+    fetchApi(()=>{
         fetch(`http://localhost:8080/api/couxthes/${id}`,{
             method:"DELETE",
         }).then(el=>{
-            if(el.status==500){
+            if(el.status==500 || el.statusText){
                 swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
             }else{
                 fetch(`http://localhost:8080/api/themes/${idTheme}`,{
                     method:"DELETE",
                 }).then(el=>{
-                    if(el.status==500){
+                    if(el.status==500 || el.statusText){
                         swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
                     }else{
                         dom.parentNode.remove();
@@ -367,7 +416,7 @@ const deleteTheme=(dom,id,idTheme)=>{
                 });
             }
         });
-    });
+    },"¿Estas seguro que quieres eliminar el tema?","Al aceptar eliminarás el tema y no habrá vuelta atras.");
 }
 
 const eventsThemesCourse=(e)=>{

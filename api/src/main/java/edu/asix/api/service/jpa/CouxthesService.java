@@ -35,5 +35,9 @@ public class CouxthesService implements ICouxthesService {
 	public void eliminar(int id) {
 		repoCouxthes.deleteById(id);
 	}
+	
+	public void eliminarTodos() {
+		repoCouxthes.deleteAll();
+	}
 
 }

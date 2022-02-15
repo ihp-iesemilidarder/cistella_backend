@@ -45,7 +45,7 @@ public class ProfilesController {
 	@PostMapping("/profiles") 
 	public Object insertar(@RequestBody Profile profile) {
 		HashMap<String,String> result = new HashMap<String,String>();
-		//try {
+		try {
 			result.put("title", "Ups...");
 			result.put("type", "warning");
 			if(profile.getUsername().length()==0) {
@@ -63,12 +63,12 @@ public class ProfilesController {
 			result.put("title", "Registrado correctamente");
 			result.put("text", "Bien!!! Te has registrado!!");
 			return result;
-		/*}catch(Exception e){
+		}catch(Exception e){
 			result.put("type", "error");
 			result.put("title", "Error inesperado");
 			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
 			return result;
-		}*/
+		}
 	}
 	
 	@PutMapping("/profiles")

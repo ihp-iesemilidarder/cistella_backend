@@ -52,4 +52,10 @@ public class CategoriesController {
 		serviceCategories.eliminar(idCategory);
 		return "Registro Eliminado";
 	}
+	
+	@DeleteMapping("/categories/all")
+	public String eliminarTodos() {
+		serviceCategories.eliminarTodos();
+		return "Registros Eliminados";
+	}
 }

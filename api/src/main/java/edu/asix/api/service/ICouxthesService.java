@@ -10,4 +10,5 @@ public interface ICouxthesService {
 	Couxthe recuperar (int id);
 	void guardar(Couxthe couxthe);
 	void eliminar(int id);
+	void eliminarTodos();
 }

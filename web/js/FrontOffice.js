@@ -189,9 +189,22 @@ const postProfile=async(teacher,profile)=>{
 
 const fetchsRegister=async(data)=>{
     let teacher = await postTeacher(data.teacher);
-    if(teacher!=true) return swal(teacher.title,teacher.text,teacher.type);
+    if(teacher!=true){
+        try{
+            return swal(teacher.title,teacher.text,teacher.type);
+        }catch{
+            return swal("Error inesperado","No se pudo registrar los datos","error");
+        }
+        
+    }
     let profile = await postProfile(data.teacher,data.profile);
-    if(profile!=true) return swal(profile.title,profile.text,profile.type);
+    if(profile!=true){
+        try{
+            return swal(profile.title,profile.text,profile.type);
+        }catch{
+            return swal("Error inesperado","No se pudo registrar los datos","error");
+        }
+    }
 }
 
 const sendRegister=async()=>{

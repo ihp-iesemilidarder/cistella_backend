@@ -36,5 +36,9 @@ public class ThemesService implements IThemesService {
 	public void eliminar(int idTheme) {
 		repoThemes.deleteById(idTheme);
 	}
+	
+	public void eliminarTodos() {
+		repoThemes.deleteAll();
+	}
 
 }

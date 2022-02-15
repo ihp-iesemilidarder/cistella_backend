@@ -65,7 +65,7 @@ public class TeachersController {
 	@PostMapping("/teachers") 
 	public Object insertar(@RequestBody Teacher teacher) {
 		HashMap<String,String> result = new HashMap<String,String>();
-		//try {
+		try {
 			result.put("title", "Ups...");
 			result.put("type", "warning");
 			if(teacher.getName().length()==0) {
@@ -80,12 +80,12 @@ public class TeachersController {
 			}
 			serviceTeachers.guardar(teacher);
 			return true;
-		/*}catch(Exception e){
+		}catch(Exception e){
 			result.put("type", "error");
 			result.put("title", "Error inesperado");
 			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
 			return result;
-		}*/
+		}
 	}
 	
 	@PutMapping("/teachers")

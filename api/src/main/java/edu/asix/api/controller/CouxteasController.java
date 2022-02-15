@@ -52,4 +52,10 @@ public class CouxteasController {
 		serviceCouxteas.eliminar(id);
 		return "Registro Eliminado";
 	}
+	
+	@DeleteMapping("/couxteas/all")
+	public String eliminarTodos() {
+		serviceCouxteas.eliminarTodos();
+		return "Registros Eliminados";
+	}
 }

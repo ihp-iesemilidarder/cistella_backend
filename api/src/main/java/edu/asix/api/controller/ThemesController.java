@@ -52,4 +52,10 @@ public class ThemesController {
 		serviceThemes.eliminar(idTheme);
 		return "Registro Eliminado";
 	}
+	
+	@DeleteMapping("/themes/all")
+	public String eliminarTodos() {
+		serviceThemes.eliminarTodos();
+		return "Registros Eliminados";
+	}
 }
