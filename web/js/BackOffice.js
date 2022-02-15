@@ -70,6 +70,120 @@ const deleteItemTable=(callback)=>{
     });
 }
 
+const printOptions=async(table)=>{
+    let output="";
+    let request = await fetch(`http://localhost:8080/api/${table}s`);
+    let options = await request.json();
+    await options.forEach(option=>{
+        let name;
+        let id;
+        switch(table){
+            case "teacher":
+                name=`${option.name} ${option.firstSurname} ${option.secondSurname}`;
+                id=option.id;
+                break;
+            case "category":
+                name=option.name;
+                id=option.id;
+                break;
+            case "profile":
+                name=option.username;
+                id=option.id;
+                break;
+            case "course":
+                name=option.title;
+                id=option.id;
+                break;
+            case "theme":
+                name=option.theName;
+                id=option.theId;
+                break;
+            }
+            output+=`<option value="${id}">${name}</option>`;
+    });    
+    return output;
+}
+
+const setLabels=async(columns,dom)=>{
+    columns.forEach(async column=>{
+        let label = document.createElement("label");
+        label.for=column[0];
+        label.textContent=column[0];
+        dom.appendChild(label);
+        if(column[1]=="select"){
+            null;
+        }else{
+            let input = document.createElement("input");
+            input.type=column[1];
+            input.name = column[0];
+            input.setAttribute("class","u-full-width");
+            input.placeholder=`type a ${column[0]}`;
+            input.id=column[0];
+            dom.appendChild(input);
+        }
+    });
+}
+
+const generateForm=async(columns)=>{
+    try{
+        containerAdmin.querySelector("table").remove();
+    }catch{
+        containerAdmin.querySelector("span").remove();
+    }finally{
+        let form = document.createElement("form");
+        form.method="POST";
+        form.id="form-add-table";
+        containerAdmin.appendChild(form);
+        setLabels(columns,containerAdmin.querySelector("form"));
+        let submit = document.createElement("input");
+        submit.type="button";
+        submit.setAttribute("class","button-primary");
+        submit.value="Insertar";
+        containerAdmin.querySelector("form").appendChild(submit);
+    }
+
+}
+
+const changeToForm=async(dom)=>{
+    let nameTable = containerAdmin.dataset.table;
+    let columns = {
+        teachers:[
+            ["name","text"],
+            ["firstSurname","text"],
+            ["secondSurname","text"]
+        ],
+        categories:[
+            ["name","text"]
+        ],
+        profiles:[
+            ["teacher","select"],
+            ["username","text"],
+            ["password","password"]
+        ]
+    }
+    await generateForm(columns[nameTable]);
+}
+
+const insertDataTable=(table,elements)=>{
+    let data = {};
+    for(let element of elements){
+        if(element.value!="Insertar") data[element.name]=element.value;
+    }
+    try{
+        fetch(`http://localhost:8080/api/${table}`,{
+            method:"POST",
+            body:JSON.stringify(data),
+            headers:{
+                "Content-type":"application/json"
+            }
+        });
+        swal("Datos insertados correctamente","Los datos fueron insertados correctamente!!","success");        
+    }catch{
+        swal("Error inesperado","Error al insertar los datos en la tabla","error");
+    }
+
+}
+
 const eventsAdmin=(e)=>{
     let dom = e.target;
     if(dom.classList.contains("fa-times")){
@@ -87,18 +201,27 @@ const eventsAdmin=(e)=>{
                 }
             });
         });
+    }else if(dom.classList.contains("add-data-table")){
+        dom.classList.replace("fa-plus","fa-eye");
+        dom.classList.replace("add-data-table","view-data-table");
+        changeToForm(dom);
+    }else if(dom.classList.contains("view-data-table")){
+        dom.classList.replace("fa-eye","fa-plus");
+        dom.classList.replace("view-data-table","add-data-table");
+        loadTable(dom.parentNode.dataset.table);
+    }else if(dom.value=="Insertar"){
+        insertDataTable(dom.parentNode.parentNode.dataset.table,dom.parentNode.elements);
     }
 }
 
 const printTable=(data)=>{
-    if(data.length==0) return "Table empty";
+    if(data.length==0) return "<span>Table empty</span>";
     let output=[];
     data.map(el=>{
-        if(el.teacher) delete el["teacher"];
+        if(el.teacher) el["teacher"] = `${el.teacher.name} ${el.teacher.firstSurname} ${el.teacher.secondSurname}`;
         if(el.password) delete el["password"];
         output.push(el);
     });
-    console.log(output);
     let keys = Object.keys(output[0]);
     let values = Object.values(output);
     return `
@@ -122,7 +245,8 @@ const showData=(data,table)=>{
         <i class="fas fa-times"></i>
         <h3>${table}</h3>
         ${printTable(data)}
-    `
+        <i class="fas fa-plus add-data-table"></i>
+    `;
 }
 
 const loadTable=async(table)=>{

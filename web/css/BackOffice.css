@@ -24,6 +24,30 @@ div#containerAdmin{
     animation-duration: .5s;
     overflow: auto;
 }
+div#containerAdmin .add-data-table{
+    font-size: 2em;
+    color:green;
+    padding: 2%;
+    border-radius: 100px;
+    background-color:rgba(0,128,0,.5);
+    cursor:pointer;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 2%;
+}
+div#containerAdmin .view-data-table{
+    font-size: 2em;
+    color:blue;
+    padding: 2%;
+    border-radius: 100px;
+    background-color:rgba(0, 0,255,.5);
+    cursor:pointer;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 2%;
+}
 div#containerAdmin h3{
     text-align: center;
     border-bottom: 2px solid black;
