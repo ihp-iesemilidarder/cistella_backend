@@ -103,7 +103,6 @@ const printOptions=async(dom,table)=>{
             element.textContent = name;
             dom.appendChild(element);
     });    
-    return output;
 }
 
 const setLabels=async(columns,dom)=>{
@@ -313,6 +312,19 @@ const eventsButtons=async(e)=>{
     }else if(dom.nodeName=="BUTTON" && dom.id=="usuarios"){
         containerAdmin.dataset.table="profiles";
         await loadTable("profiles");
+    }else if(dom.id=="deleteAllCourses"){
+        fetchApi(()=>{
+            fetch(`http://localhost:8080/api/courses/all`,{
+                method:"DELETE",
+            }).then(async el=>{
+                if(el.status==500 || el.statusText){
+                    swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+                }else{
+                    coursesList.innerHTML="";
+                    buttonsAdmin.querySelector("i").remove();
+                }
+            });
+        },"¿Estas seguro que quieres eliminar todos los cursos?","Si continuas, no habrá vuelta atrás.");
     }
 }
 
@@ -336,11 +348,12 @@ const removeCourse=async(dom)=>{
     fetchApi(()=>{
         fetch(`http://localhost:8080/api/courses/${dom.dataset.id}`,{
             method:"DELETE",
-        }).then(el=>{
+        }).then(async el=>{
             if(el.status==500 || el.statusText){
                 swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
             }else{
                 dom.parentNode.parentNode.parentNode.remove();
+                await buttonDeleteCourses("delete");
             }
         });
     },"¿Estas seguro que quieres eliminar el curso?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
@@ -372,6 +385,8 @@ const adminDelete=()=>{
     buttonsDeleteCourses("delete");
     buttonsTablesAdmin("delete");
     buttonLogout("delete");
+    buttonAddCourse("delete");
+    buttonsDeleteTeachers("delete");
 }
 
 const buttonLogout=(action)=>{
@@ -426,6 +441,74 @@ const eventsThemesCourse=(e)=>{
     }
 }
 
+const existData=async(table)=>{
+    try{
+        let request = await fetch(`http://localhost:8080/api/${table}`);
+        let data = await request.json();
+        return (data.length>0)?true:false;        
+    }catch{
+        return false;
+    }
+}
+
+const buttonDeleteCourses=async(action)=>{
+    if(action=="show"){
+        if(!await existData("courses")) return false;
+        buttonsAdmin.innerHTML+=`<i class="fas fa-trash" id="deleteAllCourses" title="Eliminar todos los cursos"></i>`;      
+    }else if(action=="delete"){
+        if(await existData("courses")) return false;
+        buttonsAdmin.querySelector("i").remove();
+    }
+}
+
+const buttonAddCourse=(action)=>{
+    if(action=="show"){
+        coursesList.innerHTML+="<i class='fas fa-plus' id='buttonAddCourse'></i>";
+    }else if(action=="delete"){
+        coursesList.querySelector("i.fa-plus").remove();
+    }
+}
+
+const removeTeacher=(idTeacher,idCourse)=>{
+    fetchApi(()=>{
+        fetch(`http://localhost:8080/api/couxtheas/${idTeacher}/${idCourse}`,{ // no existe el endpoint, solo eliminar la relacion no el profesor
+            method:"DELETE",
+        }).then(async el=>{
+            if(el.status==500 || el.statusText){
+                swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
+            }else{
+                dom.parentNode.parentNode.parentNode.remove();
+                await buttonDeleteCourses("delete");
+            }
+        });
+    },"¿Estas seguro que quieres eliminar el profesor?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
+}
+
+const eventsListCourses=async(e)=>{
+    let dom = e.target;
+    if(dom.classList.contains("eliminar-curso")){
+        await removeCourse(dom);
+    }else if(dom.classList.contains("deleteTeacher")){
+        let idTeacher = dom.parentNode.dataset.id;
+        let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
+        removeTeacher(idTeacher,idCourse);
+    }
+}
+
+const buttonsDeleteTeachers=(action)=>{
+    let courses = coursesList.querySelectorAll(".card");
+    courses.forEach(course=>{
+        let teachers = course.querySelectorAll(".profesor");
+        teachers.forEach(teacher=>{
+            if(action=="show"){
+                teacher.innerHTML+="<i class='fas fa-times deleteTeacher' style='color:red;font-size:1em;margin:0 1%;cursor:pointer;'></i>";
+            }else if(action=="delete"){
+                teacher.querySelector("i.fa-times").remove();
+            }
+        });
+    });
+}
+
 export const BackOffice=async()=>{
     if(getCookie("username")==undefined && getUsername(getCookie("username"))) return null;
     buttonsTablesAdmin("show");
@@ -435,5 +518,8 @@ export const BackOffice=async()=>{
     containerThemeCourse.addEventListener("click",eventsThemesCourse);
     containerAdmin.addEventListener("click",eventsAdmin);
     buttonsAdmin.addEventListener("click",await eventsButtons);
-    coursesList.addEventListener("click",await deleteCourse);
+    coursesList.addEventListener("click",await eventsListCourses);
+    await buttonDeleteCourses("show");
+    buttonAddCourse("show");
+    buttonsDeleteTeachers("show");
 }

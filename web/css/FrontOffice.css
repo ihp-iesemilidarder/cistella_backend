@@ -215,6 +215,10 @@ ul {
 
 /* Estilos cursos */
 /* ----------------------------------- */
+.teacherIcon{
+  font-size: 1em;
+  margin: 0 5% 0 0;
+}
 .delete-theme{
   position: relative!important;
   font-size: 1em!important;

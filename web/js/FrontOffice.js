@@ -311,7 +311,7 @@ function printTeachers(teachers){
     let result = "";
     teachers.forEach(teacher=>{
         result+=`
-            <p class="profesor"><i class="fas fa-user"></i><span>${teacher.name} ${teacher.firstSurname} ${teacher.secondSurname}</span></p>
+            <p class="profesor" data-id="${teacher.id}"><i class="fas fa-user teacherIcon"></i><span>${teacher.name} ${teacher.firstSurname} ${teacher.secondSurname}</span></p>
         `;         
     });
     return result;
@@ -322,7 +322,7 @@ function printCourses(data) {
     data.forEach(ob => {
         // I convert the values to upper case always for compare
         coursesList.innerHTML += `
-            <div class="card">
+            <div class="card" data-id="${ob.couId}">
                 <img src="img/${ob.couImg}" class="imagen-curso u-full-width">
                 <div class="info-card">
                     <h4>${ob.couTitle}</h4>

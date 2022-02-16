@@ -66,6 +66,7 @@ div#containerAdmin i.fa-times{
 
 div#containerAdmin table .actions{
     font-size: 1.5em;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
 }
@@ -75,5 +76,21 @@ div#containerAdmin table .actions .fa-trash{
 }
 div#containerAdmin table .actions .fa-edit{
     color:rgb(41, 44, 243);
+    cursor: pointer;
+}
+i#deleteAllCourses{
+    font-size: 1.5em;
+    margin: 0 1%;
+    cursor: pointer;
+    color: rgb(247, 76, 76);
+}
+i#buttonAddCourse{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    background: rgba(0, 255, 0,.2);
+    color: green;
+    padding: 2%;
     cursor: pointer;
 }
