@@ -184,7 +184,7 @@ const changeToForm=async(method)=>{
 const insertDataTable=(table,elements,dataFixed="")=>{
     let data = {};
     if(table=="couxteas"){
-        data.course={couId:dataFixed}
+        data.course=dataFixed
     }
     for(let element of elements){
         if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
@@ -192,10 +192,6 @@ const insertDataTable=(table,elements,dataFixed="")=>{
             console.log(element.name);
             if(element.name=="teacher" && table=="profiles"){
                 data["id"]=element.value;
-                data[element.name]={
-                    id:element.value
-                }
-            }else if(element.name=="teacher" && table=="couxteas"){
                 data[element.name]={
                     id:element.value
                 }
