@@ -94,3 +94,11 @@ i#buttonAddCourse{
     padding: 2%;
     cursor: pointer;
 }
+i.add-teacher{
+    display: block;
+    color: green;
+    background-color: rgba(0, 255, 0,.2);
+    text-align: center;
+    cursor:pointer;
+    padding: 2%;
+}

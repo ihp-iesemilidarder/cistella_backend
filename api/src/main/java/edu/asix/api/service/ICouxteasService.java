@@ -9,6 +9,6 @@ public interface ICouxteasService {
 	List<Couxtea> buscarTodos();
 	Couxtea recuperar (int id);
 	void guardar(Couxtea couxtea);
-	void eliminar(int id);
+	void eliminar(int idCourse,int idTeacher);
 	void eliminarTodos();
 }

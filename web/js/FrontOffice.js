@@ -327,7 +327,10 @@ function printCourses(data) {
                 <div class="info-card">
                     <h4>${ob.couTitle}</h4>
                     <p class="descripcion">${ob.couDescription}</p>
-                    ${printTeachers(ob.teachers)}
+                    <div class="profesores">
+                        ${printTeachers(ob.teachers)}
+                    </div>
+                    <div></div>
                     <div id="stars">
                         ${printStars(ob.couStars)}
                     </div>

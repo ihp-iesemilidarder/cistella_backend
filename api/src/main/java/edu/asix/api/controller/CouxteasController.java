@@ -47,9 +47,9 @@ public class CouxteasController {
 		return couxtea;
 	} 
 	
-	@DeleteMapping("/couxteas/{id}")
-	public String eliminar(@PathVariable("id") int id) {
-		serviceCouxteas.eliminar(id);
+	@DeleteMapping("/couxteas/{idCourse}/{idTeacher}")
+	public String eliminar(@PathVariable("idCourse") int idCourse,@PathVariable("idTeacher") int idTeacher) {
+		serviceCouxteas.eliminar(idCourse,idTeacher);
 		return "Registro Eliminado";
 	}
 	

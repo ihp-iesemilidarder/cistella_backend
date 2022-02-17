@@ -33,8 +33,8 @@ public class CouxteaService implements ICouxteasService {
 		return null;
 	}
 
-	public void eliminar(int id) {
-		repoCouxteas.deleteById(id);
+	public void eliminar(int idCourse,int idTeacher) {
+		repoCouxteas.deleteByCouseAndTeacher(idCourse,idTeacher);
 	}
 	
 	public void eliminarTodos() {

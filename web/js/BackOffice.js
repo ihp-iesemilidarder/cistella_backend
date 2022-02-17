@@ -135,14 +135,18 @@ const setLabels=async(columns,dom)=>{
     });
 }
 
-const generateForm=async(columns)=>{
+const generateForm=async(columns,method)=>{
     try{
         containerAdmin.querySelector("table").remove();
     }catch{
-        containerAdmin.querySelector("span").remove();
+        try{
+            containerAdmin.querySelector("span").remove();
+        }catch{
+            throw "continue";
+        }
     }finally{
         let form = document.createElement("form");
-        form.method="POST";
+        form.method=method;
         form.id="form-add-table";
         containerAdmin.appendChild(form);
         setLabels(columns,containerAdmin.querySelector("form"));
@@ -154,7 +158,7 @@ const generateForm=async(columns)=>{
     }
 }
 
-const changeToForm=async(dom)=>{
+const changeToForm=async(method)=>{
     let nameTable = containerAdmin.dataset.table;
     let columns = {
         teachers:[
@@ -169,16 +173,27 @@ const changeToForm=async(dom)=>{
             ["teacher","select"],
             ["username","text"],
             ["password","password"]
+        ],
+        couxteas:[
+            ["teacher","select"]
         ]
     }
-    await generateForm(columns[nameTable]);
+    await generateForm(columns[nameTable],method);
 }
 
 const insertDataTable=(table,elements)=>{
     let data = {};
     for(let element of elements){
         if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
-        if(element.value!="Insertar") data[element.name]=element.value;
+        if(element.value!="Insertar"){
+            if(element.name=="teacher"){
+                data[element.name]={
+                    id:element.value
+                }
+            }else{
+                data[element.name]=element.value;
+            }
+        }
     }
     try{
         fetch(`http://localhost:8080/api/${table}`,{
@@ -245,7 +260,7 @@ const eventsAdmin=(e)=>{
     }else if(dom.classList.contains("add-data-table")){
         dom.classList.replace("fa-plus","fa-eye");
         dom.classList.replace("add-data-table","view-data-table");
-        changeToForm(dom);
+        changeToForm("POST");
     }else if(dom.classList.contains("view-data-table")){
         dom.classList.replace("fa-eye","fa-plus");
         dom.classList.replace("view-data-table","add-data-table");
@@ -386,7 +401,8 @@ const adminDelete=()=>{
     buttonsTablesAdmin("delete");
     buttonLogout("delete");
     buttonAddCourse("delete");
-    buttonsDeleteTeachers("delete");
+    buttonsRelationshipsTeachers("delete","delete");
+    buttonsRelationshipsTeachers("delete","add");
 }
 
 const buttonLogout=(action)=>{
@@ -469,19 +485,29 @@ const buttonAddCourse=(action)=>{
     }
 }
 
-const removeTeacher=(idTeacher,idCourse)=>{
+const removeTeacher=(dom,idCourse,idTeacher)=>{
     fetchApi(()=>{
-        fetch(`http://localhost:8080/api/couxtheas/${idTeacher}/${idCourse}`,{ // no existe el endpoint, solo eliminar la relacion no el profesor
+        fetch(`http://localhost:8080/api/couxteas/${idCourse}/${idTeacher}`,{
             method:"DELETE",
         }).then(async el=>{
             if(el.status==500 || el.statusText){
                 swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
             }else{
-                dom.parentNode.parentNode.parentNode.remove();
+                dom.parentNode.remove();
                 await buttonDeleteCourses("delete");
             }
         });
     },"¿Estas seguro que quieres eliminar el profesor?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
+}
+
+const showFormDataRelationship=async(table,method,title)=>{
+    containerAdmin.style.display="block";
+    containerAdmin.dataset.table=table;
+    containerAdmin.innerHTML=`
+        <i class="fas fa-times"></i>
+        <h3>${title}</h3>
+    `;
+    await changeToForm(method);
 }
 
 const eventsListCourses=async(e)=>{
@@ -491,21 +517,34 @@ const eventsListCourses=async(e)=>{
     }else if(dom.classList.contains("deleteTeacher")){
         let idTeacher = dom.parentNode.dataset.id;
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
-        removeTeacher(idTeacher,idCourse);
+        removeTeacher(dom,idCourse,idTeacher);
+    }else if(dom.classList.contains("add-teacher")){
+        let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
+        await showFormDataRelationship("couxteas","POST","Profesores en el curso");
     }
 }
 
-const buttonsDeleteTeachers=(action)=>{
+const buttonsRelationshipsTeachers=(action,type)=>{
     let courses = coursesList.querySelectorAll(".card");
     courses.forEach(course=>{
-        let teachers = course.querySelectorAll(".profesor");
-        teachers.forEach(teacher=>{
+        if(type=="delete"){
+            let teachers = course.querySelectorAll(".profesor");
+            teachers.forEach(teacher=>{
+                if(action=="show"){
+                    teacher.innerHTML+="<i class='fas fa-times deleteTeacher' style='color:red;font-size:1em;margin:0 1%;cursor:pointer;'></i>";
+                }else if(action=="delete"){
+                    teacher.querySelector("i.fa-times").remove();
+                }
+            });            
+        }else if(type=="add"){
+            let div = course.querySelector("div.profesores+div");
             if(action=="show"){
-                teacher.innerHTML+="<i class='fas fa-times deleteTeacher' style='color:red;font-size:1em;margin:0 1%;cursor:pointer;'></i>";
+                div.innerHTML="<i class='fas fa-plus add-teacher'></i>";
             }else if(action=="delete"){
-                teacher.querySelector("i.fa-times").remove();
+                div.innerHTML="";
             }
-        });
+        }
+
     });
 }
 
@@ -521,5 +560,6 @@ export const BackOffice=async()=>{
     coursesList.addEventListener("click",await eventsListCourses);
     await buttonDeleteCourses("show");
     buttonAddCourse("show");
-    buttonsDeleteTeachers("show");
+    buttonsRelationshipsTeachers("show","delete");
+    buttonsRelationshipsTeachers("show","add");
 }
