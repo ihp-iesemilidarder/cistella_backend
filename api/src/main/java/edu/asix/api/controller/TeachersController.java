@@ -62,8 +62,8 @@ public class TeachersController {
 		 return teacher;
 	}
 	
-	@PostMapping("/teachers") 
-	public Object insertar(@RequestBody Teacher teacher) {
+	@PostMapping("/teachers/register") 
+	public Object insertarRegisro(@RequestBody Teacher teacher) {
 		HashMap<String,String> result = new HashMap<String,String>();
 		try {
 			result.put("title", "Ups...");
@@ -83,7 +83,7 @@ public class TeachersController {
 		}catch(Exception e){
 			result.put("type", "error");
 			result.put("title", "Error inesperado");
-			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez");
+			result.put("text", "Vaya!! No te has podido registrar, intentalo otra vez o ocurrio algun otro error");
 			return result;
 		}
 	}

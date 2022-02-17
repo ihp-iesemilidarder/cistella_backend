@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lambdaworks.crypto.SCryptUtil;
 
 import edu.asix.api.classes.Login;
+import edu.asix.api.entity.Category;
 import edu.asix.api.entity.Profile;
 import edu.asix.api.entity.Teacher;
 import edu.asix.api.service.IProfilesService;
@@ -43,7 +44,13 @@ public class ProfilesController {
 	}
 	
 	@PostMapping("/profiles") 
-	public Object insertar(@RequestBody Profile profile) {
+	public Profile insertar(@RequestBody Profile profile) {
+		serviceProfiles.guardar(profile);
+		return profile;
+	}
+	
+	@PostMapping("/profiles/register") 
+	public Object insertarRegistro(@RequestBody Profile profile) {
 		HashMap<String,String> result = new HashMap<String,String>();
 		try {
 			result.put("title", "Ups...");

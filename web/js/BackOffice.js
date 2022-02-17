@@ -181,12 +181,21 @@ const changeToForm=async(method)=>{
     await generateForm(columns[nameTable],method);
 }
 
-const insertDataTable=(table,elements)=>{
+const insertDataTable=(table,elements,dataFixed="")=>{
     let data = {};
+    if(table=="couxteas"){
+        data.course={couId:dataFixed}
+    }
     for(let element of elements){
         if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
         if(element.value!="Insertar"){
-            if(element.name=="teacher"){
+            console.log(element.name);
+            if(element.name=="teacher" && table=="profiles"){
+                data["id"]=element.value;
+                data[element.name]={
+                    id:element.value
+                }
+            }else if(element.name=="teacher" && table=="couxteas"){
                 data[element.name]={
                     id:element.value
                 }
@@ -195,6 +204,7 @@ const insertDataTable=(table,elements)=>{
             }
         }
     }
+    console.log(data);
     try{
         fetch(`http://localhost:8080/api/${table}`,{
             method:"POST",
@@ -266,7 +276,10 @@ const eventsAdmin=(e)=>{
         dom.classList.replace("view-data-table","add-data-table");
         loadTable(dom.parentNode.dataset.table);
     }else if(dom.value=="Insertar"){
-        insertDataTable(dom.parentNode.parentNode.dataset.table,dom.parentNode.elements);
+        let table = dom.parentNode.parentNode.dataset.table;
+        let elements = dom.parentNode.elements;
+        let dataFixed = containerAdmin.querySelector("input[type='hidden']").value;
+        insertDataTable(table,elements,dataFixed);
     }
 }
 
@@ -305,6 +318,7 @@ const showData=(data,table)=>{
     containerAdmin.innerHTML=`
         <i class="fas fa-times"></i>
         <h3>${table}</h3>
+        <input type='hidden' value='' disabled>
         ${printTable(data)}
         <i class="fas fa-plus add-data-table"></i>
     `;
@@ -500,12 +514,13 @@ const removeTeacher=(dom,idCourse,idTeacher)=>{
     },"¿Estas seguro que quieres eliminar el profesor?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
-const showFormDataRelationship=async(table,method,title)=>{
+const showFormDataRelationship=async(idCourse,table,method,title)=>{
     containerAdmin.style.display="block";
     containerAdmin.dataset.table=table;
     containerAdmin.innerHTML=`
         <i class="fas fa-times"></i>
         <h3>${title}</h3>
+        <input type="hidden" value="${idCourse}" disabled>
     `;
     await changeToForm(method);
 }
@@ -520,7 +535,7 @@ const eventsListCourses=async(e)=>{
         removeTeacher(dom,idCourse,idTeacher);
     }else if(dom.classList.contains("add-teacher")){
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
-        await showFormDataRelationship("couxteas","POST","Profesores en el curso");
+        await showFormDataRelationship(idCourse,"couxteas","POST","Profesores en el curso");
     }
 }
 

@@ -162,7 +162,7 @@ const showTheme=(e)=>{
 }
 
 const postTeacher=async(teacher)=>{
-    let request = await fetch("http://localhost:8080/api/teachers",{
+    let request = await fetch("http://localhost:8080/api/teachers/register",{
         method:"POST",
         headers:new Headers({"content-type":"application/json"}),
         body:JSON.stringify(teacher)
@@ -179,7 +179,7 @@ const postProfile=async(teacher,profile)=>{
     let teacherComplete = await requestTeacher.json();
     body.teacher = teacherComplete;
     body.id = teacherComplete.id;
-    let requestProfile = await fetch("http://localhost:8080/api/profiles",{
+    let requestProfile = await fetch("http://localhost:8080/api/profiles/register",{
         method:"POST",
         body: JSON.stringify(body),
         headers: new Headers({"content-type":"application/json"})
