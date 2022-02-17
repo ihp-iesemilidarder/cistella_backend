@@ -63,7 +63,7 @@ CREATE TABLE `course` (
   KEY `cou_cat_FK` (`cou_cat_name`),
   CONSTRAINT `cou_cat_FK` FOREIGN KEY (`cou_cat_name`) REFERENCES `category` (`cat_name`),
   CONSTRAINT `cou_stars_CK` CHECK (`cou_stars` >= 1 and `cou_stars` <= 5)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (6,'Desarrollo Python','Descripcion',0.50,100.50,'curso1.jpg','2002-02-03','2003-02-03','20:00:00','01:00:00',3.5,'Informatica');
+INSERT INTO `course` VALUES (39,'Curso de Spring','Este es un curso intensivo de Spring',50.00,20.00,'curso1.jpg','2021-02-21','2022-02-21','20:00:00','01:00:00',5.0,'Informatica');
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `couxtea` (
   KEY `cxt_tea_FK` (`cxt_tea_id`),
   CONSTRAINT `cxt_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `cxt_tea_FK` FOREIGN KEY (`cxt_tea_id`) REFERENCES `teacher` (`tea_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,7 +101,6 @@ CREATE TABLE `couxtea` (
 
 LOCK TABLES `couxtea` WRITE;
 /*!40000 ALTER TABLE `couxtea` DISABLE KEYS */;
-INSERT INTO `couxtea` VALUES (8,6,7),(7,6,11);
 /*!40000 ALTER TABLE `couxtea` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,7 +122,7 @@ CREATE TABLE `couxthe` (
   KEY `cxt_order_IX` (`cxt_order`),
   CONSTRAINT `couxthe_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `couxthe_the_FK` FOREIGN KEY (`cxt_the_id`) REFERENCES `theme` (`the_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +131,6 @@ CREATE TABLE `couxthe` (
 
 LOCK TABLES `couxthe` WRITE;
 /*!40000 ALTER TABLE `couxthe` DISABLE KEYS */;
-INSERT INTO `couxthe` VALUES (2,6,1,1),(3,6,2,2),(6,6,3,3);
 /*!40000 ALTER TABLE `couxthe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,7 +156,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (7,'IVAN','1234'),(11,'ivan','1234');
+INSERT INTO `profile` VALUES (178,'ivan','$s0$41010$VIns30qJBtI13TpygIHOvQ==$fnVAUUnerH+NN3fspp9D+DweF/DIEabjfdaV4IH+vX4=');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +174,7 @@ CREATE TABLE `teacher` (
   `tea_surname2` varchar(100) NOT NULL,
   PRIMARY KEY (`tea_id`),
   UNIQUE KEY `teacher_UK` (`tea_name`,`tea_surname1`,`tea_surname2`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +183,7 @@ CREATE TABLE `teacher` (
 
 LOCK TABLES `teacher` WRITE;
 /*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
-INSERT INTO `teacher` VALUES (7,'IvanModify2','Heredia','Planas'),(11,'IvanModify3','Heredia','Planas'),(13,'IvanModify4','Heredia','Planas');
+INSERT INTO `teacher` VALUES (178,'ivan','heredia','planas');
 /*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,8 +198,9 @@ CREATE TABLE `theme` (
   `the_id` int(11) NOT NULL AUTO_INCREMENT,
   `the_title` varchar(100) NOT NULL,
   `the_description` varchar(500) NOT NULL,
-  PRIMARY KEY (`the_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
+  PRIMARY KEY (`the_id`),
+  UNIQUE KEY `theme_title_UK` (`the_title`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +209,6 @@ CREATE TABLE `theme` (
 
 LOCK TABLES `theme` WRITE;
 /*!40000 ALTER TABLE `theme` DISABLE KEYS */;
-INSERT INTO `theme` VALUES (1,'Introduccion','Introduccion al desarrollo web'),(2,'HTML & CSS','Aprenderas hacer maquetaciones Web con HTML & CSS'),(3,'Javascript','Aprenderas hacer funciones y logistica del lado del cliente.');
 /*!40000 ALTER TABLE `theme` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -223,4 +221,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-09 15:49:27
+-- Dump completed on 2022-02-17 23:25:16

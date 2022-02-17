@@ -144,9 +144,9 @@ const printSheet=async(id)=>{
     couxthes.forEach(couxthe=>{
         containerTheme.querySelector("div").innerHTML+=`
             <div>
-                ${buttonDelete(couxthe.id,couxthe.theme.theId)}
-                <h5><font color="red">${couxthe.order}.</font> ${couxthe.theme.theTitle}</h5>
-                <p>${couxthe.theme.theDescription}</p>                
+                ${buttonDelete(couxthe.id,couxthe.theme.id)}
+                <h5><font color="red">${couxthe.order}.</font> ${couxthe.theme.title}</h5>
+                <p>${couxthe.theme.description}</p>                
             </div>
         `;
     });
@@ -337,6 +337,7 @@ function printCourses(data) {
                     <p class="precio">${ob.couPrice}€ <span class="u-pull-right ">${ob.couPriceOffer}€</span></p>
                     <input type="text" placeholder="descuento" id="descuento">
                     <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.couId}">Ver temario</a>
+                    <div class="add-theme"></div>
                     <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
                     <span class="admin-card"></span>
                     <p class="type">${ob.category}</p>

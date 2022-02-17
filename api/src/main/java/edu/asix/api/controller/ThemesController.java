@@ -34,6 +34,12 @@ public class ThemesController {
 		 Theme teacher = serviceThemes.recuperar(idTheme);
 		 return teacher;
 	}
+
+	@GetMapping("/themes/search/{title}") 
+	public Theme recuperar(@PathVariable("title") String title) {
+		 Theme teacher = serviceThemes.recuperarPorTitulo(title);
+		 return teacher;
+	}
 	
 	@PostMapping("/themes") 
 	public Theme insertar(@RequestBody Theme teacher) {

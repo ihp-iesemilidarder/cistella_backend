@@ -17,34 +17,42 @@ public class Theme {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="the_id")
-	private int theId;
+	private int id;
 
 	@Column(name="the_title")
-	private String theTitle;
+	private String title;
 	
 	@Column(name="the_description")
-	private String theDescription;
-	
-	public int getTheId() {
-		return theId;
+	private String description;
+
+	public int getId() {
+		return id;
 	}
-	public void setTheId(int theId) {
-		this.theId = theId;
+
+	public void setId(int id) {
+		this.id = id;
 	}
-	public String getTheTitle() {
-		return theTitle;
+
+	public String getTitle() {
+		return title;
 	}
-	public void setTheTitle(String theTitle) {
-		this.theTitle = theTitle;
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
-	public String getTheDescription() {
-		return theDescription;
+
+	public String getDescription() {
+		return description;
 	}
-	public void setTheDescription(String theDescription) {
-		this.theDescription = theDescription;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
+
 	@Override
 	public String toString() {
-		return "Theme [theId=" + theId + ", theTitle=" + theTitle + ", theDescription=" + theDescription + "]";
+		return "Theme [id=" + id + ", title=" + title + ", description=" + description + "]";
 	}
+	
+	
 }

@@ -1,5 +1,7 @@
 package edu.asix.api.repository;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +16,6 @@ public interface ThemesRepository extends JpaRepository<Theme, Integer> {
 	@Query(value="DELETE FROM theme",
 			   nativeQuery=true)
 	public void deleteAll();
+	
+	public Optional<Theme> findByTitle(String title);
 }

@@ -176,9 +176,58 @@ const changeToForm=async(method)=>{
         ],
         couxteas:[
             ["teacher","select"]
+        ],
+        couxthes:[
+            ["title","text"],
+            ["description","text"],
+            ["order","number"]
         ]
     }
     await generateForm(columns[nameTable],method);
+}
+
+const findThemeByTitle=async(title)=>{
+    let request = await fetch(`http://localhost:8080/api/themes/search/${title}`);
+    let data  =await request.json();
+    return data.id;
+}
+
+const addThemeInCourse=(body,dataFixed)=>{
+    let order = body.order;
+    delete body.order;
+    try{
+        fetch(`http://localhost:8080/api/themes`,{
+            method:"POST",
+            body:JSON.stringify(body),
+            headers:{
+                "Content-type":"application/json"
+            }
+        }).then(request=>request.json())
+        .then(async data=>{
+            if(data.status==500 || data.statusText){
+                swal("Error inesperado","Error al insertar los datos en la tabla","error");
+            }else{
+                console.log(data);
+                let idTheme = await findThemeByTitle(data.title);
+                let body = {
+                    course:{couId:dataFixed},
+                    theme:{id:idTheme},
+                    order:order
+                }
+                console.log(body);
+                fetch("http://localhost:8080/api/couxthes",{
+                    method:"POST",
+                    body:JSON.stringify(body),
+                    headers:{
+                        "Content-type":"application/json"
+                    }
+                });
+                swal("Añadido correctamente","Temario añadido correctamente al curso","success");
+            }
+        });        
+    }catch{
+        swal("Error inesperado","Error al insertar los datos en la tabla","error");
+    }
 }
 
 const insertDataTable=(table,elements,dataFixed="")=>{
@@ -200,7 +249,10 @@ const insertDataTable=(table,elements,dataFixed="")=>{
             }
         }
     }
-    console.log(data);
+
+    // If the user adds themes in one course
+    if (table=="couxthes") return addThemeInCourse(data,dataFixed);
+
     try{
         fetch(`http://localhost:8080/api/${table}`,{
             method:"POST",
@@ -353,19 +405,28 @@ const eventsButtons=async(e)=>{
     }
 }
 
-const buttonsDeleteCourses=(action)=>{
-    let courses = coursesList.querySelectorAll("#list-content .card .info-card span.admin-card");
-    courses.forEach(course=>{
+const buttonsAdminCourses=(action)=>{
+    let buttonsAdmin = coursesList.querySelectorAll("#list-content .card .info-card span.admin-card");
+    buttonsAdmin.forEach(course=>{
         if(action=="show"){
             let id = course.parentNode.querySelector(".showTheme").dataset.id;
             course.innerHTML=`
                 <a href="#" class="u-full-width button-primary button input editar-curso" data-id="${id}">Editar Curso</a>
                 <a href="#" class="u-full-width button-primary button input eliminar-curso" data-id="${id}">Eliminar Curso</a>
-            `;               
+            `;             
         }else if(action=="delete"){
             course.innerHTML=``;
         }
-    })
+    });
+    let buttonsThemes = coursesList.querySelectorAll("#list-content .card .info-card div.add-theme");
+    buttonsThemes.forEach(el=>{
+        if(action=="show"){
+            el.innerHTML+=`<i class='fas fa-plus button-add-theme' title='Añadir tema nuevo al curso'></i>`;
+        }else if(action=="delete"){
+            el.innerHTML="";
+        }
+        
+    });
     
 }
 
@@ -384,13 +445,6 @@ const removeCourse=async(dom)=>{
     },"¿Estas seguro que quieres eliminar el curso?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
-const deleteCourse=async(e)=>{
-    let dom = e.target;
-    if(dom.classList.contains("eliminar-curso")){
-        await removeCourse(dom);
-    }
-}
-
 const getUsername=async(name)=>{
     let request = await fetch("http://localhost:8080/api/profiles/");
     let data = await request.json();
@@ -407,7 +461,7 @@ const checkSession=async()=>{
 }
 
 const adminDelete=()=>{
-    buttonsDeleteCourses("delete");
+    buttonsAdminCourses("delete");
     buttonsTablesAdmin("delete");
     buttonLogout("delete");
     buttonAddCourse("delete");
@@ -532,6 +586,9 @@ const eventsListCourses=async(e)=>{
     }else if(dom.classList.contains("add-teacher")){
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
         await showFormDataRelationship(idCourse,"couxteas","POST","Profesores en el curso");
+    }else if(dom.classList.contains("button-add-theme")){
+        let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
+        await showFormDataRelationship(idCourse,"couxthes","POST","Temas en el curso");
     }
 }
 
@@ -562,7 +619,7 @@ const buttonsRelationshipsTeachers=(action,type)=>{
 export const BackOffice=async()=>{
     if(getCookie("username")==undefined && getUsername(getCookie("username"))) return null;
     buttonsTablesAdmin("show");
-    buttonsDeleteCourses("show");
+    buttonsAdminCourses("show");
     buttonLogout("show");
     await checkSession();
     containerThemeCourse.addEventListener("click",eventsThemesCourse);

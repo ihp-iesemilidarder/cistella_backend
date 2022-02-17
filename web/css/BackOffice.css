@@ -94,7 +94,7 @@ i#buttonAddCourse{
     padding: 2%;
     cursor: pointer;
 }
-i.add-teacher{
+i.add-teacher,i.button-add-theme{
     display: block;
     color: green;
     background-color: rgba(0, 255, 0,.2);

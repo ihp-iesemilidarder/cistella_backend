@@ -40,5 +40,13 @@ public class ThemesService implements IThemesService {
 	public void eliminarTodos() {
 		repoThemes.deleteAll();
 	}
+	
+	public Theme recuperarPorTitulo(String title) {
+		Optional<Theme> optional = repoThemes.findByTitle(title);
+		if (optional.isPresent()) {
+			return optional.get();
+		}
+		return null;
+	}
 
 }
