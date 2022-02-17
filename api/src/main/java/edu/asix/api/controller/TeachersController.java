@@ -88,6 +88,12 @@ public class TeachersController {
 		}
 	}
 	
+	@PostMapping("/teachers")
+	public Teacher insertar(@RequestBody Teacher teacher) {
+		serviceTeachers.guardar(teacher);
+		return teacher;
+	}
+	
 	@PutMapping("/teachers")
 	public Teacher modificar(@RequestBody Teacher teacher) {
 		serviceTeachers.guardar(teacher);// al pasarle el id, modificará el álbum correspondiente 

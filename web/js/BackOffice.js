@@ -527,7 +527,7 @@ const eventsListCourses=async(e)=>{
         await removeCourse(dom);
     }else if(dom.classList.contains("deleteTeacher")){
         let idTeacher = dom.parentNode.dataset.id;
-        let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
+        let idCourse = dom.parentNode.parentNode.parentNode.parentNode.dataset.id;
         removeTeacher(dom,idCourse,idTeacher);
     }else if(dom.classList.contains("add-teacher")){
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
