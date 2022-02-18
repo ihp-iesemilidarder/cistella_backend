@@ -134,7 +134,7 @@ function addCourse(e){
 const showListCoursesThemes=async(id)=>{
     let request = await fetch(`http://localhost:8080/api/couxthes`);
     let data = await request.json();
-    data = data.filter(theme=>theme.course.couId==id);
+    data = data.filter(theme=>theme.course.id==id);
     return data;
 }
 
@@ -411,7 +411,7 @@ function loginLogout(e){
 export const FrontOffice=async()=> {
     loadTrolley();
     await loadCourses();
-    // each 2 seconds do fetch to the courses and print
+    // This each 2 seconds do fetch to the courses and print
     /*setInterval(async()=>{
         await loadCourses();
     },2000);*/

@@ -28,11 +28,11 @@ public class CoursesService implements ICoursesService {
 			case "category":
 				return repoCourses.findByCategoryContaining(text);
 			case "name":
-				return repoCourses.findByCouTitleContaining(text);
+				return repoCourses.findBytitleContaining(text);
 			case "price":
-				return repoCourses.findByCouPrice(Double.parseDouble(text));
+				return repoCourses.findByprice(Double.parseDouble(text));
 			case "DateStart":
-				return repoCourses.findByCouDateStart(LocalDate.parse(text));
+				return repoCourses.findBydateStart(LocalDate.parse(text));
 			default:
 				return repoCourses.findAll();
 		}

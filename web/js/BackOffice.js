@@ -38,9 +38,10 @@ const printValuesTable=(values)=>{
         value.forEach(el=>{
             output+=`<td>${el}</td>`;
         });
+        let editButton = (containerAdmin.dataset.table!="categories")?`<i class="fas fa-edit" data-id="${id}" style="color:rgb(41, 44, 243);cursor: pointer;"></i>`:``;
         output+=`
             <td class="icons" style="font-size: 1.5em;display: flex;justify-content: space-between;">
-                <i class="fas fa-edit" data-id="${id}" style="color:rgb(41, 44, 243);cursor: pointer;"></i>
+                ${editButton}
                 <i class="fas fa-trash" data-id="${id}" style="color:rgb(247, 76, 76);cursor: pointer;"></i>
             </td>
         `;
@@ -124,7 +125,17 @@ const inputsCourseForm=(dom,input)=>{
     }
 }
 
-const setInputs=async(columns,dom)=>{
+const setInputPutForm=(dom,idPUT)=>{
+    if(idPUT!=null){
+        let inputIdPUT = document.createElement("input");
+        inputIdPUT.type="hidden";
+        inputIdPUT.name="idPUT";
+        inputIdPUT.id="idPUT";
+        inputIdPUT.value=idPUT;
+        dom.appendChild(inputIdPUT);
+    }
+}
+const setInputs=async(columns,dom,idPUT=null)=>{
     columns.forEach(async column=>{
         let label = document.createElement("label");
         label.for=column[0];
@@ -141,7 +152,7 @@ const setInputs=async(columns,dom)=>{
             option.disabled="disabled";
             option.selected="selected";
             select.appendChild(option);
-            printOptions(select,column[1]);
+            printOptions(select,column[1],idPUT);
             if(dom.parentNode.dataset.table=="courses") inputsCourseForm(select,column[1]);
             dom.appendChild(select);
         }else if(column[2]=="textarea"){
@@ -165,7 +176,7 @@ const setInputs=async(columns,dom)=>{
     });
 }
 
-const generateForm=async(columns,method)=>{
+const generateForm=async(columns,method,idPUT=null)=>{
     try{
         containerAdmin.querySelector("table").remove();
     }catch{
@@ -179,7 +190,9 @@ const generateForm=async(columns,method)=>{
         form.method=method;
         form.id="form-add-table";
         containerAdmin.appendChild(form);
-        setInputs(columns,containerAdmin.querySelector("form"));
+        let formElement = containerAdmin.querySelector("form");
+        setInputPutForm(formElement,idPUT);
+        setInputs(columns,formElement,idPUT);
         let submit = document.createElement("input");
         submit.type="button";
         submit.setAttribute("class","button-primary");
@@ -188,7 +201,7 @@ const generateForm=async(columns,method)=>{
     }
 }
 
-const changeToForm=async(method)=>{
+const changeToForm=async(method,idPUT=null)=>{
     let nameTable = containerAdmin.dataset.table;
     let columns = {
         teachers:[
@@ -226,7 +239,7 @@ const changeToForm=async(method)=>{
             ["Categoria","category","select"]
         ]
     }
-    await generateForm(columns[nameTable],method);
+    await generateForm(columns[nameTable],method,idPUT);
 }
 
 const findThemeByTitle=async(title)=>{
@@ -253,7 +266,7 @@ const addThemeInCourse=(body,dataFixed)=>{
                 console.log(data);
                 let idTheme = await findThemeByTitle(data.title);
                 let body = {
-                    course:{couId:dataFixed},
+                    course:{id:dataFixed},
                     theme:{id:idTheme},
                     order:order
                 }
@@ -273,10 +286,13 @@ const addThemeInCourse=(body,dataFixed)=>{
     }
 }
 
-const insertDataTable=(table,elements,dataFixed="")=>{
+const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     let data = {};
     if(table=="couxteas"){
         data.course=dataFixed
+    }
+    if(idPUT!=null){
+        data.id=idPUT;
     }
     for(let element of elements){
         if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
@@ -291,10 +307,9 @@ const insertDataTable=(table,elements,dataFixed="")=>{
             }
         }
     }
-
+    console.log(data);
     // If the user adds themes in one course
     if (table=="couxthes") return addThemeInCourse(data,dataFixed);
-
     try{
         fetch(`http://localhost:8080/api/${table}`,{
             method:"POST",
@@ -361,6 +376,10 @@ const eventsAdmin=(e)=>{
         dom.classList.replace("fa-plus","fa-eye");
         dom.classList.replace("add-data-table","view-data-table");
         changeToForm("POST");
+    }else if(dom.classList.contains("fa-edit")){
+        containerAdmin.querySelector(".add-data-table").classList.replace("fa-plus","fa-eye");
+        containerAdmin.querySelector(".add-data-table").classList.replace("add-data-table","view-data-table");
+        changeToForm("PUT",dom.dataset.id);
     }else if(dom.classList.contains("view-data-table")){
         dom.classList.replace("fa-eye","fa-plus");
         dom.classList.replace("view-data-table","add-data-table");
@@ -369,7 +388,8 @@ const eventsAdmin=(e)=>{
         let table = dom.parentNode.parentNode.dataset.table;
         let elements = dom.parentNode.elements;
         let dataFixed = containerAdmin.querySelector("input[type='hidden']").value;
-        insertDataTable(table,elements,dataFixed);
+        let idPUT = containerAdmin.querySelector("form input[name='idPUT']").value || null;
+        insertUpdateDataTable(table,elements,dataFixed,idPUT);
     }
 }
 
@@ -580,7 +600,9 @@ const buttonAddCourse=(action)=>{
     if(action=="show"){
         coursesList.innerHTML+="<i class='fas fa-plus' id='buttonAddCourse'></i>";
     }else if(action=="delete"){
-        coursesList.querySelector("i.fa-plus").remove();
+        try{
+            coursesList.querySelector("i.fa-plus").remove();
+        }catch{null};
     }
 }
 
@@ -626,7 +648,7 @@ const eventsListCourses=async(e)=>{
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
         await showForm("couxthes","POST","Temas en el curso",idCourse);
     }else if(dom.id=="buttonAddCourse"){
-        await showForm("courses","POST","Añdir curso");
+        await showForm("courses","POST","Añadir curso");
     }
 }
 
