@@ -1,4 +1,4 @@
-import {getCookie} from './Utils.js';
+import {getCookie,getUsername} from './Utils.js';
 import {coursesList} from "./FrontOffice.js";
 const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
@@ -487,13 +487,6 @@ const removeCourse=async(dom)=>{
     },"¿Estas seguro que quieres eliminar el curso?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
-const getUsername=async(name)=>{
-    let request = await fetch("http://localhost:8080/api/profiles/");
-    let data = await request.json();
-    let ok = data.find(profile=>profile.username==name);
-    return (ok)?true:false;
-}
-
 const checkSession=async()=>{
     setInterval(async()=>{
         let cookieName = getCookie("username");
@@ -672,6 +665,7 @@ export const BackOffice=async()=>{
     buttonsAdmin.addEventListener("click",await eventsButtons);
     coursesList.addEventListener("click",await eventsListCourses);
     await buttonDeleteCourses("show");
+    //this is commented because there are a setInterval() in FrontOffice.js that loads the courses
     buttonAddCourse("show");
     buttonsRelationshipsTeachers("show","delete");
     buttonsRelationshipsTeachers("show","add");

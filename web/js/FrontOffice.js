@@ -1,4 +1,5 @@
 import { DateOperators } from "./Utils.js";
+import {getCookie,getUsername} from './Utils.js';
 import { BackOffice,buttonDelete } from "./BackOffice.js";
 export const coursesList = document.querySelector("#list-content");
 const search = document.querySelector("#buscador");
@@ -321,32 +322,67 @@ function printCourses(data) {
     coursesList.innerHTML = "";
     data.forEach(ob => {
         // I convert the values to upper case always for compare
-        coursesList.innerHTML += `
-            <div class="card" data-id="${ob.id}">
-                <img src="img/${ob.img}" class="imagen-curso u-full-width">
-                <div class="info-card">
-                    <h4>${ob.title}</h4>
-                    <p class="descripcion">${ob.description}</p>
-                    <div class="profesores">
-                        ${printTeachers(ob.teachers)}
+        //this if conditional is if you have the setInterval() active.
+        /*if(getCookie("username")!=undefined && getUsername(getCookie("username"))){
+            coursesList.innerHTML += `
+                <div class="card" data-id="${ob.id}">
+                    <img src="img/${ob.img}" class="imagen-curso u-full-width">
+                    <div class="info-card">
+                        <h4>${ob.title}</h4>
+                        <p class="descripcion">${ob.description}</p>
+                        <div class="profesores">
+                            ${printTeachers(ob.teachers)}
+                        </div>
+                        <div><i class="fas fa-plus add-teacher" aria-hidden="true"></i></div>
+                        <div id="stars">
+                            ${printStars(ob.stars)}
+                        </div>
+                        <p class="precio">${ob.price}€ <span class="u-pull-right ">${ob.priceOffer}€</span></p>
+                        <input type="text" placeholder="descuento" id="descuento">
+                        <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.id}">Ver temario</a>
+                        <div class="add-theme"><i class="fas fa-plus button-add-theme" title="Añadir tema nuevo al curso" aria-hidden="true"></i></div>
+                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.id}">Agregar Al Carrito</a>
+                        <span class="admin-card">
+                            <a href="#" class="u-full-width button-primary button input editar-curso" data-id="43">Editar Curso</a>
+                            <a href="#" class="u-full-width button-primary button input eliminar-curso" data-id="43">Eliminar Curso</a>
+                        </span>
+                        <p class="type">${ob.category}</p>
+                        <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.dateStart}</i><i class="fas fa-clock"> ${ob.scheduleStart}H</i></p>
+                        <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.dateFinish}</i><i class="fas fa-stopwatch"> ${ob.duration}H</i></p>
                     </div>
-                    <div></div>
-                    <div id="stars">
-                        ${printStars(ob.stars)}
-                    </div>
-                    <p class="precio">${ob.price}€ <span class="u-pull-right ">${ob.priceOffer}€</span></p>
-                    <input type="text" placeholder="descuento" id="descuento">
-                    <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.id}">Ver temario</a>
-                    <div class="add-theme"></div>
-                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.id}">Agregar Al Carrito</a>
-                    <span class="admin-card"></span>
-                    <p class="type">${ob.category}</p>
-                    <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.dateStart}</i><i class="fas fa-clock"> ${ob.scheduleStart}H</i></p>
-                    <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.dateFinish}</i><i class="fas fa-stopwatch"> ${ob.duration}H</i></p>
                 </div>
-            </div>
-        `;
+            `;
+        }else{*/
+            coursesList.innerHTML += `
+                <div class="card" data-id="${ob.id}">
+                    <img src="img/${ob.img}" class="imagen-curso u-full-width">
+                    <div class="info-card">
+                        <h4>${ob.title}</h4>
+                        <p class="descripcion">${ob.description}</p>
+                        <div class="profesores">
+                            ${printTeachers(ob.teachers)}
+                        </div>
+                        <div></div>
+                        <div id="stars">
+                            ${printStars(ob.stars)}
+                        </div>
+                        <p class="precio">${ob.price}€ <span class="u-pull-right ">${ob.priceOffer}€</span></p>
+                        <input type="text" placeholder="descuento" id="descuento">
+                        <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.id}">Ver temario</a>
+                        <div class="add-theme"></div>
+                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.id}">Agregar Al Carrito</a>
+                        <span class="admin-card"></span>
+                        <p class="type">${ob.category}</p>
+                        <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.dateStart}</i><i class="fas fa-clock"> ${ob.scheduleStart}H</i></p>
+                        <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.dateFinish}</i><i class="fas fa-stopwatch"> ${ob.duration}H</i></p>
+                    </div>
+                </div>
+            `;
+        //}
     });
+    /*if(getCookie("username")!=undefined && getUsername(getCookie("username"))){
+        coursesList.innerHTML+='<i class="fas fa-plus" id="buttonAddCourse" aria-hidden="true"></i>';
+    }*/
 }
 
 const loadCourses=async(type, text)=>{
@@ -375,5 +411,9 @@ function loginLogout(e){
 export const FrontOffice=async()=> {
     loadTrolley();
     await loadCourses();
+    // each 2 seconds do fetch to the courses and print
+    /*setInterval(async()=>{
+        await loadCourses();
+    },2000);*/
     await events();
 }

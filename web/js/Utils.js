@@ -35,3 +35,10 @@ export const getCookie=(name)=>{
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
+
+export const getUsername=async(name)=>{
+    let request = await fetch("http://localhost:8080/api/profiles/");
+    let data = await request.json();
+    let ok = data.find(profile=>profile.username==name);
+    return (ok)?true:false;
+}
