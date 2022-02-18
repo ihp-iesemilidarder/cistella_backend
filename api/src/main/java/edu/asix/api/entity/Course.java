@@ -34,13 +34,13 @@ public class Course  implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="cou_id")
-	private int couId;
+	private int id;
 	
 	@Column(name="cou_title",unique=true)
-	private String couTitle;
+	private String title;
 	
 	@Column(name="cou_description")
-	private String couDescription;
+	private String description;
 	
     @ManyToMany
     @JoinTable(
@@ -51,28 +51,28 @@ public class Course  implements Serializable{
     private Set<Teacher> teachers;
 	
 	@Column(name="cou_price")
-	private double couPrice;
+	private double price;
 	
 	@Column(name="cou_price_offer")
-	private double couPriceOffer;
+	private double priceOffer;
 	
 	@Column(name="cou_img")
-	private String couImg;
+	private String img;
 	
 	@Column(name="cou_date_start")
-	private LocalDate couDateStart;
+	private LocalDate dateStart;
 	
 	@Column(name="cou_date_finish")
-	private LocalDate couDateFinish;
+	private LocalDate dateFinish;
 	
 	@Column(name="cou_schedule_start")
-	private LocalTime couScheduleStart;
+	private LocalTime scheduleStart;
 	
 	@Column(name="cou_duration")
-	private LocalTime couDuration;
+	private LocalTime duration;
 	
 	@Column(name="cou_stars")
-	private double couStars;
+	private double stars;
 	
 	@Column(name="cou_cat_name")
 	private String category;
@@ -85,100 +85,100 @@ public class Course  implements Serializable{
 	@Column(insertable=false,updatable=false)
     private Set<Theme> themes;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Set<Teacher> getTeachers() {
 		return teachers;
 	}
 
-	public Set<Theme> getThemes() {
-		return themes;
+	public void setTeachers(Set<Teacher> teachers) {
+		this.teachers = teachers;
 	}
 
-	public int getCouId() {
-		return couId;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setCouId(int couId) {
-		this.couId = couId;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
-	public String getCouTitle() {
-		return couTitle;
+	public double getPriceOffer() {
+		return priceOffer;
 	}
 
-	public void setCouTitle(String couTitle) {
-		this.couTitle = couTitle;
+	public void setPriceOffer(double priceOffer) {
+		this.priceOffer = priceOffer;
 	}
 
-	public String getCouDescription() {
-		return couDescription;
+	public String getImg() {
+		return img;
 	}
 
-	public void setCouDescription(String couDescription) {
-		this.couDescription = couDescription;
+	public void setImg(String img) {
+		this.img = img;
 	}
 
-	public double getCouPrice() {
-		return couPrice;
+	public LocalDate getDateStart() {
+		return dateStart;
 	}
 
-	public void setCouPrice(double couPrice) {
-		this.couPrice = couPrice;
+	public void setDateStart(LocalDate dateStart) {
+		this.dateStart = dateStart;
 	}
 
-	public double getCouPriceOffer() {
-		return couPriceOffer;
+	public LocalDate getDateFinish() {
+		return dateFinish;
 	}
 
-	public void setCouPriceOffer(double couPriceOffer) {
-		this.couPriceOffer = couPriceOffer;
+	public void setDateFinish(LocalDate dateFinish) {
+		this.dateFinish = dateFinish;
 	}
 
-	public String getCouImg() {
-		return couImg;
+	public LocalTime getScheduleStart() {
+		return scheduleStart;
 	}
 
-	public void setCouImg(String couImg) {
-		this.couImg = couImg;
+	public void setScheduleStart(LocalTime scheduleStart) {
+		this.scheduleStart = scheduleStart;
 	}
 
-	public LocalDate getCouDateStart() {
-		return couDateStart;
+	public LocalTime getDuration() {
+		return duration;
 	}
 
-	public void setCouDateStart(LocalDate couDateStart) {
-		this.couDateStart = couDateStart;
+	public void setDuration(LocalTime duration) {
+		this.duration = duration;
 	}
 
-	public LocalDate getCouDateFinish() {
-		return couDateFinish;
+	public double getStars() {
+		return stars;
 	}
 
-	public void setCouDateFinish(LocalDate couDateFinish) {
-		this.couDateFinish = couDateFinish;
-	}
-
-	public LocalTime getCouScheduleStart() {
-		return couScheduleStart;
-	}
-
-	public void setCouScheduleStart(LocalTime couScheduleStart) {
-		this.couScheduleStart = couScheduleStart;
-	}
-
-	public LocalTime getCouDuration() {
-		return couDuration;
-	}
-
-	public void setCouDuration(LocalTime couDuration) {
-		this.couDuration = couDuration;
-	}
-
-	public double getCouStars() {
-		return couStars;
-	}
-
-	public void setCouStars(double couStars) {
-		this.couStars = couStars;
+	public void setStars(double stars) {
+		this.stars = stars;
 	}
 
 	public String getCategory() {
@@ -187,5 +187,21 @@ public class Course  implements Serializable{
 
 	public void setCategory(String category) {
 		this.category = category;
-	}	
+	}
+
+	public Set<Theme> getThemes() {
+		return themes;
+	}
+
+	public void setThemes(Set<Theme> themes) {
+		this.themes = themes;
+	}
+
+	@Override
+	public String toString() {
+		return "Course [id=" + id + ", title=" + title + ", description=" + description + ", teachers=" + teachers
+				+ ", price=" + price + ", priceOffer=" + priceOffer + ", img=" + img + ", dateStart=" + dateStart
+				+ ", dateFinish=" + dateFinish + ", scheduleStart=" + scheduleStart + ", duration=" + duration
+				+ ", stars=" + stars + ", category=" + category + ", themes=" + themes + "]";
+	}
 }

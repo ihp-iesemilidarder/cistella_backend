@@ -71,6 +71,7 @@ const fetchApi=(callback,title,text)=>{
 }
 
 const printOptions=async(dom,table)=>{
+    if(table=="category") table="categorie";
     let request = await fetch(`http://localhost:8080/api/${table}s`);
     let options = await request.json();
     await options.forEach(option=>{
@@ -81,9 +82,9 @@ const printOptions=async(dom,table)=>{
                 name=`${option.name} ${option.firstSurname} ${option.secondSurname}`;
                 id=option.id;
                 break;
-            case "category":
+            case "categorie":
                 name=option.name;
-                id=option.id;
+                id=option.name;
                 break;
             case "profile":
                 name=option.username;
@@ -97,23 +98,42 @@ const printOptions=async(dom,table)=>{
                 name=option.theName;
                 id=option.theId;
                 break;
-            }
-            let element = document.createElement("option");
-            element.value = id;
-            element.textContent = name;
-            dom.appendChild(element);
+        }
+        let element = document.createElement("option");
+        element.value = id;
+        element.textContent = name;
+        dom.appendChild(element);
     });    
 }
 
-const setLabels=async(columns,dom)=>{
+const inputsCourseForm=(dom,input)=>{
+    switch(input){
+        case "price":
+            dom.setAttribute("step","0.01");
+            dom.setAttribute("min","0");
+            break;
+        case "priceOffer":
+            dom.setAttribute("step","0.01");
+            dom.setAttribute("min","0");
+            break;
+        case "stars":
+            dom.setAttribute("min","0");
+            dom.setAttribute("max","5");
+            break;
+
+    }
+}
+
+const setInputs=async(columns,dom)=>{
     columns.forEach(async column=>{
         let label = document.createElement("label");
         label.for=column[0];
         label.textContent=column[0];
         dom.appendChild(label);
-        if(column[1]=="select"){
+        if(column[2]=="select"){
             let select = document.createElement("select");
-            select.name = column[0];
+            select.name = column[1];
+            select.id=column[1];
             select.setAttribute("class","u-full-width");
             let option = document.createElement("option");
             option.value=" ";
@@ -121,15 +141,25 @@ const setLabels=async(columns,dom)=>{
             option.disabled="disabled";
             option.selected="selected";
             select.appendChild(option);
-            printOptions(select,column[0]);
+            printOptions(select,column[1]);
+            if(dom.parentNode.dataset.table=="courses") inputsCourseForm(select,column[1]);
             dom.appendChild(select);
+        }else if(column[2]=="textarea"){
+            let textarea = document.createElement("textarea");
+            textarea.name = column[1];
+            textarea.id = column[1];
+            textarea.placeholder=`type a ${column[1]}`;
+            textarea.setAttribute("class","u-full-width");
+            if(dom.parentNode.dataset.table=="courses") inputsCourseForm(textarea,column[1]);
+            dom.appendChild(textarea);
         }else{
             let input = document.createElement("input");
-            input.type=column[1];
-            input.name = column[0];
+            input.type=column[2];
+            input.name = column[1];
             input.setAttribute("class","u-full-width");
-            input.placeholder=`type a ${column[0]}`;
-            input.id=column[0];
+            input.placeholder=`type a ${column[1]}`;
+            input.id=column[1];
+            if(dom.parentNode.dataset.table=="courses") inputsCourseForm(input,column[1]);
             dom.appendChild(input);
         }
     });
@@ -149,7 +179,7 @@ const generateForm=async(columns,method)=>{
         form.method=method;
         form.id="form-add-table";
         containerAdmin.appendChild(form);
-        setLabels(columns,containerAdmin.querySelector("form"));
+        setInputs(columns,containerAdmin.querySelector("form"));
         let submit = document.createElement("input");
         submit.type="button";
         submit.setAttribute("class","button-primary");
@@ -162,25 +192,38 @@ const changeToForm=async(method)=>{
     let nameTable = containerAdmin.dataset.table;
     let columns = {
         teachers:[
-            ["name","text"],
-            ["firstSurname","text"],
-            ["secondSurname","text"]
+            ["Nombre","name","text"],
+            ["Primer apellido","firstSurname","text"],
+            ["Segundo apellido","secondSurname","text"]
         ],
         categories:[
-            ["name","text"]
+            ["Nombre","name","text"]
         ],
         profiles:[
-            ["teacher","select"],
-            ["username","text"],
-            ["password","password"]
+            ["Profesor","teacher","select"],
+            ["Usuario","username","text"],
+            ["Contraseña","password","password"]
         ],
         couxteas:[
-            ["teacher","select"]
+            ["Profesor","teacher","select"]
         ],
         couxthes:[
-            ["title","text"],
-            ["description","text"],
-            ["order","number"]
+            ["Titulo","title","text"],
+            ["Descripcion","description","text"],
+            ["Orden","order","number"]
+        ],
+        courses:[
+            ["Titulo","title","text"],
+            ["Descripcion","description","textarea"],
+            ["Precio","price","number"],
+            ["Precio rebajado","priceOffer","number"],
+            ["Ruta de la imagen","img","text"],
+            ["Fecha de inicio","dateStart","date"],
+            ["Fecha de finalización","dateFinish","date"],
+            ["Hora de inicio","scheduleStart","time"],
+            ["Duracion de la clase","duration","time"],
+            ["Puntuacion","stars","number"],
+            ["Categoria","category","select"]
         ]
     }
     await generateForm(columns[nameTable],method);
@@ -238,7 +281,6 @@ const insertDataTable=(table,elements,dataFixed="")=>{
     for(let element of elements){
         if(element.value=="") return swal("Hay campos vacios","Debes de rellenar todo el formulario","warning");
         if(element.value!="Insertar"){
-            console.log(element.name);
             if(element.name=="teacher" && table=="profiles"){
                 data["id"]=element.value;
                 data[element.name]={
@@ -397,7 +439,7 @@ const eventsButtons=async(e)=>{
                 if(el.status==500 || el.statusText){
                     swal("Vaya...","Parece que se produjo un error al querer eliminar el item. Puede que esta tabla esta relacionada con otra.","error");
                 }else{
-                    coursesList.innerHTML="";
+                    coursesList.innerHTML='<i class="fas fa-plus" id="buttonAddCourse" aria-hidden="true"></i>';
                     buttonsAdmin.querySelector("i").remove();
                 }
             });
@@ -564,13 +606,14 @@ const removeTeacher=(dom,idCourse,idTeacher)=>{
     },"¿Estas seguro que quieres eliminar el profesor?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
-const showFormDataRelationship=async(idCourse,table,method,title)=>{
+const showForm=async(table,method,title,idCourse)=>{
     containerAdmin.style.display="block";
     containerAdmin.dataset.table=table;
+    let hiddenInput = (idCourse!=undefined)?`<input type="hidden" value="${idCourse}" disabled>`:"<input type='hidden' value=''>";
     containerAdmin.innerHTML=`
         <i class="fas fa-times"></i>
         <h3>${title}</h3>
-        <input type="hidden" value="${idCourse}" disabled>
+        ${hiddenInput}
     `;
     await changeToForm(method);
 }
@@ -585,10 +628,12 @@ const eventsListCourses=async(e)=>{
         removeTeacher(dom,idCourse,idTeacher);
     }else if(dom.classList.contains("add-teacher")){
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
-        await showFormDataRelationship(idCourse,"couxteas","POST","Profesores en el curso");
+        await showForm("couxteas","POST","Profesores en el curso",idCourse);
     }else if(dom.classList.contains("button-add-theme")){
         let idCourse = dom.parentNode.parentNode.parentNode.dataset.id;
-        await showFormDataRelationship(idCourse,"couxthes","POST","Temas en el curso");
+        await showForm("couxthes","POST","Temas en el curso",idCourse);
+    }else if(dom.id=="buttonAddCourse"){
+        await showForm("courses","POST","Añdir curso");
     }
 }
 

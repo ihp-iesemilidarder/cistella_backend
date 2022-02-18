@@ -12,9 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 import edu.asix.api.entity.Course;
 
 public interface CoursesRepository extends JpaRepository<Course, Integer> {
-	public List<Course> findByCouTitleContaining(String text);
-	public List<Course> findByCouPrice(double text);
-	public List<Course> findByCouDateStart(LocalDate text);
+	public List<Course> findBytitleContaining(String text);
+	public List<Course> findByprice(double text);
+	public List<Course> findBydateStart(LocalDate text);
 	public List<Course> findByCategoryContaining(String text);
 	@Transactional
 	@Modifying

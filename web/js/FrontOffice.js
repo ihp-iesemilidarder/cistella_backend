@@ -322,27 +322,27 @@ function printCourses(data) {
     data.forEach(ob => {
         // I convert the values to upper case always for compare
         coursesList.innerHTML += `
-            <div class="card" data-id="${ob.couId}">
-                <img src="img/${ob.couImg}" class="imagen-curso u-full-width">
+            <div class="card" data-id="${ob.id}">
+                <img src="img/${ob.img}" class="imagen-curso u-full-width">
                 <div class="info-card">
-                    <h4>${ob.couTitle}</h4>
-                    <p class="descripcion">${ob.couDescription}</p>
+                    <h4>${ob.title}</h4>
+                    <p class="descripcion">${ob.description}</p>
                     <div class="profesores">
                         ${printTeachers(ob.teachers)}
                     </div>
                     <div></div>
                     <div id="stars">
-                        ${printStars(ob.couStars)}
+                        ${printStars(ob.stars)}
                     </div>
-                    <p class="precio">${ob.couPrice}€ <span class="u-pull-right ">${ob.couPriceOffer}€</span></p>
+                    <p class="precio">${ob.price}€ <span class="u-pull-right ">${ob.priceOffer}€</span></p>
                     <input type="text" placeholder="descuento" id="descuento">
-                    <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.couId}">Ver temario</a>
+                    <a href="#" class="u-full-width button-secondary button input showTheme" data-id="${ob.id}">Ver temario</a>
                     <div class="add-theme"></div>
-                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.couId}">Agregar Al Carrito</a>
+                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="${ob.id}">Agregar Al Carrito</a>
                     <span class="admin-card"></span>
                     <p class="type">${ob.category}</p>
-                    <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.couDateStart}</i><i class="fas fa-clock"> ${ob.couScheduleStart}H</i></p>
-                    <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.couDateFinish}</i><i class="fas fa-stopwatch"> ${ob.couDuration}H</i></p>
+                    <p class="dateStart"><i class="fas fa-calendar-day"> ${ob.dateStart}</i><i class="fas fa-clock"> ${ob.scheduleStart}H</i></p>
+                    <p class="dateFinish"><i class="fas fa-calendar-week"> ${ob.dateFinish}</i><i class="fas fa-stopwatch"> ${ob.duration}H</i></p>
                 </div>
             </div>
         `;
