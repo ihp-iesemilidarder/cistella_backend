@@ -4,7 +4,7 @@ const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
 const containerThemeCourse = document.querySelector("body #themeCourse");
 
-//// show the buttons for does CRUD in the teachers,categories and users
+// show the buttons for does CRUD in the teachers,categories and users
 const buttonsTablesAdmin=(action)=>{
     if(action=="show"){
         buttonsAdmin.innerHTML+=`
@@ -17,7 +17,8 @@ const buttonsTablesAdmin=(action)=>{
     }
 }
 
-// This prints the tabla for show the items list of one table //
+/////  This prints the tabla for show the items list of one table  /////
+///////////////////////////////////////////////////////////////////////
 const printColumnsTable=(keys)=>{
     let output = "";
     keys.forEach(key=>{
@@ -81,9 +82,9 @@ const printTable=(data)=>{
         </table>
     `;
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
-//// This function do a fetch (POST,PUT,DELETE,UPDATE)
+// This function do a fetch (POST,PUT,DELETE,UPDATE)
 const fetchApi=(callback,title,text)=>{
     swal({
         title: title,
@@ -105,7 +106,8 @@ const fetchApi=(callback,title,text)=>{
     });
 }
 
-// This generates the form for add and update the rows in one table //
+///// This generates the form for add and update the rows in one table /////
+///////////////////////////////////////////////////////////////////////////
 const setSelectedOption=(element,table,name,dataPUT)=>{
     switch(table){
         case "teacher":
@@ -129,6 +131,7 @@ const setSelectedOption=(element,table,name,dataPUT)=>{
     }
 }
 
+// Print the options of a select HTML
 const printOptions=async(dom,table,dataPUT=null)=>{
     if(table=="category") table="categorie";
     let request = await fetch(`http://localhost:8080/api/${table}s`);
@@ -276,7 +279,7 @@ const generateForm=async(columns,method,idPUT=null)=>{
     }
 }
 
-//// Function that prints the form when the user clicks in edit-table button
+// Function that prints the form when the user clicks in edit-table button
 const changeToForm=async(method,idPUT=null)=>{
     let nameTable = containerAdmin.dataset.table;
     let columns = {
@@ -362,7 +365,7 @@ const findThemeByTitle=async(title)=>{
     return data.id;
 }
 
-//// Event for button 'Insertar' in form
+// Event for button 'Insertar' in form
 const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     let data = {};
     if(table=="couxteas"){
@@ -407,7 +410,7 @@ const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     }
 
 }
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 
 // This function delete all the rows in one table
 const deleteAll=(table,dom)=>{
