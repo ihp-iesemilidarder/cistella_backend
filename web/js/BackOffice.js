@@ -4,6 +4,7 @@ const buttonsAdmin= document.querySelector("#buttons-admin");
 const containerAdmin = document.querySelector("div#containerAdmin");
 const containerThemeCourse = document.querySelector("body #themeCourse");
 
+//// show the buttons for does CRUD in the teachers,categories and users
 const buttonsTablesAdmin=(action)=>{
     if(action=="show"){
         buttonsAdmin.innerHTML+=`
@@ -16,6 +17,7 @@ const buttonsTablesAdmin=(action)=>{
     }
 }
 
+// This prints the tabla for show the items list of one table //
 const printColumnsTable=(keys)=>{
     let output = "";
     keys.forEach(key=>{
@@ -50,6 +52,38 @@ const printValuesTable=(values)=>{
     return output;
 }
 
+const printTable=(data)=>{
+    if(data.length==0) return "<span>Table empty</span>";
+    let output=[];
+    data.map(el=>{
+        if(el.teacher) el["teacher"] = `${el.teacher.name} ${el.teacher.firstSurname} ${el.teacher.secondSurname}`;
+        if(el.password) delete el["password"];
+        output.push(el);
+    });
+    let keys = Object.keys(output[0]);
+    let values = Object.values(output);
+    return `
+        <table class="u-full-width">
+            <thead>
+                <tr>
+                    ${printColumnsTable(keys)}
+                    <th style="text-align:center;"><i class="fas fa-trash deleteAll" style="
+                        color:rgb(247, 76, 76);
+                        text-content:center;
+                        cursor:pointer;
+                        font-size:1.5em;
+                    "></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${printValuesTable(values)}
+            </tbody>
+        </table>
+    `;
+}
+///////////////////////////////////////////////////////////////
+
+//// This function do a fetch (POST,PUT,DELETE,UPDATE)
 const fetchApi=(callback,title,text)=>{
     swal({
         title: title,
@@ -71,7 +105,31 @@ const fetchApi=(callback,title,text)=>{
     });
 }
 
-const printOptions=async(dom,table)=>{
+// This generates the form for add and update the rows in one table //
+const setSelectedOption=(element,table,name,dataPUT)=>{
+    switch(table){
+        case "teacher":
+            let nameCompleteTeacher=`${dataPUT[table].name} ${dataPUT[table].firstSurname} ${dataPUT[table].secondSurname}`;
+            if (name==nameCompleteTeacher) element.setAttribute("selected","selected");
+            break;
+        case "category":
+            console.log(name);
+            console.log(dataPUT[table]["name"]);
+            if (name==dataPUT[table]) element.setAttribute("selected","selected");
+            break;
+        case "profile":
+            if (name==dataPUT[table].username) element.setAttribute("selected","selected");
+            break;
+        case "course":
+            if (name==dataPUT[table].title) element.setAttribute("selected","selected");
+            break;
+        case "theme":
+            if (name==dataPUT[table].title) element.setAttribute("selected","selected");
+            break;
+    }
+}
+
+const printOptions=async(dom,table,dataPUT=null)=>{
     if(table=="category") table="categorie";
     let request = await fetch(`http://localhost:8080/api/${table}s`);
     let options = await request.json();
@@ -103,6 +161,12 @@ const printOptions=async(dom,table)=>{
         let element = document.createElement("option");
         element.value = id;
         element.textContent = name;
+        table=(table=="categorie")?"category":table;
+        console.log(table);
+        console.log(dataPUT);
+        console.log(name);
+        console.log(id);
+        if(dataPUT!=null) setSelectedOption(element,table,name,dataPUT);
         dom.appendChild(element);
     });    
 }
@@ -135,7 +199,9 @@ const setInputPutForm=(dom,idPUT)=>{
         dom.appendChild(inputIdPUT);
     }
 }
-const setInputs=async(columns,dom,idPUT=null)=>{
+
+const setInputs=async(columns,dom,dataPUT=null)=>{
+    let table = containerAdmin.dataset.table;
     columns.forEach(async column=>{
         let label = document.createElement("label");
         label.for=column[0];
@@ -152,7 +218,7 @@ const setInputs=async(columns,dom,idPUT=null)=>{
             option.disabled="disabled";
             option.selected="selected";
             select.appendChild(option);
-            printOptions(select,column[1],idPUT);
+            printOptions(select,column[1],dataPUT);
             if(dom.parentNode.dataset.table=="courses") inputsCourseForm(select,column[1]);
             dom.appendChild(select);
         }else if(column[2]=="textarea"){
@@ -162,11 +228,13 @@ const setInputs=async(columns,dom,idPUT=null)=>{
             textarea.placeholder=`type a ${column[1]}`;
             textarea.setAttribute("class","u-full-width");
             if(dom.parentNode.dataset.table=="courses") inputsCourseForm(textarea,column[1]);
+            (dataPUT!=null && column[1]!="password")?textarea.value=dataPUT[column[1]]:null;
             dom.appendChild(textarea);
         }else{
             let input = document.createElement("input");
             input.type=column[2];
             input.name = column[1];
+            (dataPUT!=null && column[1]!="password")?input.value=dataPUT[column[1]]:null;
             input.setAttribute("class","u-full-width");
             input.placeholder=`type a ${column[1]}`;
             input.id=column[1];
@@ -174,6 +242,12 @@ const setInputs=async(columns,dom,idPUT=null)=>{
             dom.appendChild(input);
         }
     });
+}
+
+const getDataUpdate=async(table,id)=>{
+    let request = await fetch(`http://localhost:8080/api/${table}/${id}`);
+    let data = await request.json();
+    return data;
 }
 
 const generateForm=async(columns,method,idPUT=null)=>{
@@ -192,7 +266,8 @@ const generateForm=async(columns,method,idPUT=null)=>{
         containerAdmin.appendChild(form);
         let formElement = containerAdmin.querySelector("form");
         setInputPutForm(formElement,idPUT);
-        setInputs(columns,formElement,idPUT);
+        let dataPUT = (idPUT!=null)?await getDataUpdate(containerAdmin.dataset.table,idPUT):null;
+        setInputs(columns,formElement,dataPUT);
         let submit = document.createElement("input");
         submit.type="button";
         submit.setAttribute("class","button-primary");
@@ -201,6 +276,7 @@ const generateForm=async(columns,method,idPUT=null)=>{
     }
 }
 
+//// Function that prints the form when the user clicks in edit-table button
 const changeToForm=async(method,idPUT=null)=>{
     let nameTable = containerAdmin.dataset.table;
     let columns = {
@@ -242,12 +318,6 @@ const changeToForm=async(method,idPUT=null)=>{
     await generateForm(columns[nameTable],method,idPUT);
 }
 
-const findThemeByTitle=async(title)=>{
-    let request = await fetch(`http://localhost:8080/api/themes/search/${title}`);
-    let data  =await request.json();
-    return data.id;
-}
-
 const addThemeInCourse=(body,dataFixed)=>{
     let order = body.order;
     delete body.order;
@@ -286,6 +356,13 @@ const addThemeInCourse=(body,dataFixed)=>{
     }
 }
 
+const findThemeByTitle=async(title)=>{
+    let request = await fetch(`http://localhost:8080/api/themes/search/${title}`);
+    let data  =await request.json();
+    return data.id;
+}
+
+//// Event for button 'Insertar' in form
 const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     let data = {};
     if(table=="couxteas"){
@@ -312,7 +389,7 @@ const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     if (table=="couxthes") return addThemeInCourse(data,dataFixed);
     try{
         fetch(`http://localhost:8080/api/${table}`,{
-            method:"POST",
+            method:(idPUT!=null)?"PUT":"POST",
             body:JSON.stringify(data),
             headers:{
                 "Content-type":"application/json"
@@ -330,7 +407,9 @@ const insertUpdateDataTable=(table,elements,dataFixed="",idPUT=null)=>{
     }
 
 }
+//////////////////////////////////////////////////////////////////////////
 
+// This function delete all the rows in one table
 const deleteAll=(table,dom)=>{
     fetchApi(()=>{
         fetch(`http://localhost:8080/api/${table}/all`,{
@@ -346,6 +425,7 @@ const deleteAll=(table,dom)=>{
     },"¿Estas seguro que quieres eliminar todos los datos de la tabla?","Al aceptar eliminarás todos los registros y no habrá vuelta atras.");
 }
 
+// This function delete one table row
 const deleteItem=(table,dom)=>{
     fetchApi(()=>{
         fetch(`http://localhost:8080/api/${table}/${dom.dataset.id}`,{
@@ -363,6 +443,7 @@ const deleteItem=(table,dom)=>{
     }
 }
 
+// Here there are the popup tables' events
 const eventsAdmin=(e)=>{
     let dom = e.target;
     if(dom.classList.contains("fa-times")){
@@ -388,39 +469,12 @@ const eventsAdmin=(e)=>{
         let table = dom.parentNode.parentNode.dataset.table;
         let elements = dom.parentNode.elements;
         let dataFixed = containerAdmin.querySelector("input[type='hidden']").value;
-        let idPUT = containerAdmin.querySelector("form input[name='idPUT']").value || null;
+        let idPUT=null;
+        try{
+            idPUT = containerAdmin.querySelector("form input[name='idPUT']").value;
+        }catch{idPUT=null};
         insertUpdateDataTable(table,elements,dataFixed,idPUT);
     }
-}
-
-const printTable=(data)=>{
-    if(data.length==0) return "<span>Table empty</span>";
-    let output=[];
-    data.map(el=>{
-        if(el.teacher) el["teacher"] = `${el.teacher.name} ${el.teacher.firstSurname} ${el.teacher.secondSurname}`;
-        if(el.password) delete el["password"];
-        output.push(el);
-    });
-    let keys = Object.keys(output[0]);
-    let values = Object.values(output);
-    return `
-        <table class="u-full-width">
-            <thead>
-                <tr>
-                    ${printColumnsTable(keys)}
-                    <th style="text-align:center;"><i class="fas fa-trash deleteAll" style="
-                        color:rgb(247, 76, 76);
-                        text-content:center;
-                        cursor:pointer;
-                        font-size:1.5em;
-                    "></i></th>
-                </tr>
-            </thead>
-            <tbody>
-                ${printValuesTable(values)}
-            </tbody>
-        </table>
-    `;
 }
 
 const showData=(data,table)=>{
@@ -440,6 +494,7 @@ const loadTable=async(table)=>{
     showData(data,table);
 }
 
+// Here there are the events of buttons Admin
 const eventsButtons=async(e)=>{
     let dom = e.target;
     if(dom.nodeName=="BUTTON" && dom.id=="profesores"){
@@ -467,6 +522,7 @@ const eventsButtons=async(e)=>{
     }
 }
 
+// Here the admin buttons for each course (card). Show it or hidden it 
 const buttonsAdminCourses=(action)=>{
     let buttonsAdmin = coursesList.querySelectorAll("#list-content .card .info-card span.admin-card");
     buttonsAdmin.forEach(course=>{
@@ -515,6 +571,7 @@ const checkSession=async()=>{
     },2000);
 }
 
+// This function is throw when the session is expired, deleting all admin buttons 
 const adminDelete=()=>{
     buttonsAdminCourses("delete");
     buttonsTablesAdmin("delete");
@@ -524,6 +581,7 @@ const adminDelete=()=>{
     buttonsRelationshipsTeachers("delete","add");
 }
 
+// show/hide the logout button
 const buttonLogout=(action)=>{
     if(action=="show"){
         let login = document.querySelector("header i#login");
@@ -621,7 +679,7 @@ const removeTeacher=(dom,idCourse,idTeacher)=>{
     },"¿Estas seguro que quieres eliminar el profesor?","Al aceptar eliminarás el curso y no habrá vuelta atras.");
 }
 
-const showForm=async(table,method,title,idCourse)=>{
+const showForm=async(table,method,title,idCourse=undefined,idPUT)=>{
     containerAdmin.style.display="block";
     containerAdmin.dataset.table=table;
     let hiddenInput = (idCourse!=undefined)?`<input type="hidden" value="${idCourse}" disabled>`:"<input type='hidden' value=''>";
@@ -630,13 +688,15 @@ const showForm=async(table,method,title,idCourse)=>{
         <h3>${title}</h3>
         ${hiddenInput}
     `;
-    await changeToForm(method);
+    await changeToForm(method,idPUT);
 }
 
 const eventsListCourses=async(e)=>{
     let dom = e.target;
     if(dom.classList.contains("eliminar-curso")){
         await removeCourse(dom);
+    }else if(dom.classList.contains("editar-curso")){
+        showForm("courses","PUT","Editar curso",undefined,dom.dataset.id);
     }else if(dom.classList.contains("deleteTeacher")){
         let idTeacher = dom.parentNode.dataset.id;
         let idCourse = dom.parentNode.parentNode.parentNode.parentNode.dataset.id;
@@ -661,7 +721,7 @@ const buttonsRelationshipsTeachers=(action,type)=>{
                 if(action=="show"){
                     teacher.innerHTML+="<i class='fas fa-times deleteTeacher' style='color:red;font-size:1em;margin:0 1%;cursor:pointer;'></i>";
                 }else if(action=="delete"){
-                    teacher.querySelector("i.fa-times").remove();
+                    try{teacher.querySelector("i.fa-times").remove()}catch{null};
                 }
             });            
         }else if(type=="add"){

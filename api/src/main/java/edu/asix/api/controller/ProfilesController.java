@@ -80,6 +80,9 @@ public class ProfilesController {
 	
 	@PutMapping("/profiles")
 	public Profile modificar(@RequestBody Profile profile) {
+		String  originalPassword = profile.getPassword().toString();
+		String generatedSecuredPasswordHash = SCryptUtil.scrypt(originalPassword, 16, 16, 16);
+		profile.setPassword(generatedSecuredPasswordHash);
 		serviceProfiles.guardar(profile);// al pasarle el id, modificará el álbum correspondiente 
 		return profile;
 	} 
