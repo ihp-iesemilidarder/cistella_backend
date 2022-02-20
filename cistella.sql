@@ -34,7 +34,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES ('Informatica');
+INSERT INTO `category` VALUES ('Cocina');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -63,7 +63,7 @@ CREATE TABLE `course` (
   KEY `cou_cat_FK` (`cou_cat_name`),
   CONSTRAINT `cou_cat_FK` FOREIGN KEY (`cou_cat_name`) REFERENCES `category` (`cat_name`),
   CONSTRAINT `cou_stars_CK` CHECK (`cou_stars` >= 1 and `cou_stars` <= 5)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `course` (
 
 LOCK TABLES `course` WRITE;
 /*!40000 ALTER TABLE `course` DISABLE KEYS */;
-INSERT INTO `course` VALUES (39,'Curso de Spring','Este es un curso intensivo de Spring',50.00,20.00,'curso1.jpg','2021-02-21','2022-02-21','20:00:00','01:00:00',5.0,'Informatica');
+INSERT INTO `course` VALUES (60,'Curso Express de cocina','Aquí aprenderás a hacer recetas muy buenas y ricas, gracias a nuestro profesor David Zapata, master chef en unos de los restaurantes más lujosos de Palma de Mallorca',150.00,50.00,'curso2.jpg','2022-02-21','2022-03-14','10:30:00','04:00:00',5.0,'Cocina');
 /*!40000 ALTER TABLE `course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +92,7 @@ CREATE TABLE `couxtea` (
   KEY `cxt_tea_FK` (`cxt_tea_id`),
   CONSTRAINT `cxt_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `cxt_tea_FK` FOREIGN KEY (`cxt_tea_id`) REFERENCES `teacher` (`tea_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -101,6 +101,7 @@ CREATE TABLE `couxtea` (
 
 LOCK TABLES `couxtea` WRITE;
 /*!40000 ALTER TABLE `couxtea` DISABLE KEYS */;
+INSERT INTO `couxtea` VALUES (39,60,189);
 /*!40000 ALTER TABLE `couxtea` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +123,7 @@ CREATE TABLE `couxthe` (
   KEY `cxt_order_IX` (`cxt_order`),
   CONSTRAINT `couxthe_cou_FK` FOREIGN KEY (`cxt_cou_id`) REFERENCES `course` (`cou_id`),
   CONSTRAINT `couxthe_the_FK` FOREIGN KEY (`cxt_the_id`) REFERENCES `theme` (`the_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,6 +132,7 @@ CREATE TABLE `couxthe` (
 
 LOCK TABLES `couxthe` WRITE;
 /*!40000 ALTER TABLE `couxthe` DISABLE KEYS */;
+INSERT INTO `couxthe` VALUES (29,60,38,1);
 /*!40000 ALTER TABLE `couxthe` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -156,7 +158,7 @@ CREATE TABLE `profile` (
 
 LOCK TABLES `profile` WRITE;
 /*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-INSERT INTO `profile` VALUES (178,'ivan','$s0$41010$VIns30qJBtI13TpygIHOvQ==$fnVAUUnerH+NN3fspp9D+DweF/DIEabjfdaV4IH+vX4=');
+INSERT INTO `profile` VALUES (188,'jsebas','$s0$41010$RxF1A4crQhF/PqLcxdlwBg==$+yyF1S7WQKNGjCKbw9C6UXJaifACCB68EPP9S6VNaNk='),(189,'dzapata','$s0$41010$PbVHG2UGa0g+inyAak2N/Q==$2ksDCXoTxLF9puz2wclFw6qwTFfalq8o0T+7Iuxs/Ao=');
 /*!40000 ALTER TABLE `profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +176,7 @@ CREATE TABLE `teacher` (
   `tea_surname2` varchar(100) NOT NULL,
   PRIMARY KEY (`tea_id`),
   UNIQUE KEY `teacher_UK` (`tea_name`,`tea_surname1`,`tea_surname2`)
-) ENGINE=InnoDB AUTO_INCREMENT=180 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +185,7 @@ CREATE TABLE `teacher` (
 
 LOCK TABLES `teacher` WRITE;
 /*!40000 ALTER TABLE `teacher` DISABLE KEYS */;
-INSERT INTO `teacher` VALUES (178,'ivan','heredia','planas');
+INSERT INTO `teacher` VALUES (191,'admin','admin','admin'),(189,'David','Zapata','Gonzalez'),(188,'Jhon','Sebas',' ');
 /*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +202,7 @@ CREATE TABLE `theme` (
   `the_description` varchar(500) NOT NULL,
   PRIMARY KEY (`the_id`),
   UNIQUE KEY `theme_title_UK` (`the_title`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,6 +211,7 @@ CREATE TABLE `theme` (
 
 LOCK TABLES `theme` WRITE;
 /*!40000 ALTER TABLE `theme` DISABLE KEYS */;
+INSERT INTO `theme` VALUES (38,'Introducción','Aprenderemos los fundamentos básicos de la cocina');
 /*!40000 ALTER TABLE `theme` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -221,4 +224,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-17 23:25:16
+-- Dump completed on 2022-02-20 18:08:19
