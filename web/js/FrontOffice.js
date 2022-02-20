@@ -1,6 +1,5 @@
-import { DateOperators } from "./Utils.js";
-import {getCookie,getUsername} from './Utils.js';
-import { BackOffice,buttonDelete } from "./BackOffice.js";
+import { DateOperators, getCookie,getUsername} from "./Utils.js";
+import { BackOffice } from "./BackOffice.js";
 export const coursesList = document.querySelector("#list-content");
 const search = document.querySelector("#buscador");
 let coursesTrolley = JSON.parse(localStorage.getItem("coursesTrolley")) || [];
@@ -23,7 +22,7 @@ const emptyTrolley=(e) => {
     loadTrolley();
 }
 
-function deleteCourse(e){
+function deleteCourseTrolley(e){
     e.preventDefault();
     let node = e.target;
     if(!node.classList.contains("borrar-curso")) return false;
@@ -138,6 +137,13 @@ const showListCoursesThemes=async(id)=>{
     return data;
 }
 
+const buttonDeleteTheme=(id,idTheme)=>{
+    if(getCookie("username")==undefined && getUsername(getCookie("username"))) return "";
+    return `
+        <i class="fas fa-times delete-theme" data-id="${id}" data-idtheme="${idTheme}"></i>
+    `;
+}
+
 const printSheet=async(id)=>{
     let couxthes = await showListCoursesThemes(id);
     containerTheme.querySelector("div").innerHTML="";
@@ -145,7 +151,7 @@ const printSheet=async(id)=>{
     couxthes.forEach(couxthe=>{
         containerTheme.querySelector("div").innerHTML+=`
             <div>
-                ${buttonDelete(couxthe.id,couxthe.theme.id)}
+                ${buttonDeleteTheme(couxthe.id,couxthe.theme.id)}
                 <h5><font color="red">${couxthe.order}.</font> ${couxthe.theme.title}</h5>
                 <p>${couxthe.theme.description}</p>                
             </div>
@@ -259,7 +265,7 @@ const register=()=>{
 const events=async()=>{
     search.addEventListener("keyup",filterCourse);
     coursesList.addEventListener("click",addCourse);
-    Trolley.addEventListener("click",deleteCourse);
+    Trolley.addEventListener("click",deleteCourseTrolley);
     buttonEmptyTrolley.addEventListener("click",emptyTrolley);
     buttonRegister.addEventListener("click",register);
     header.addEventListener("click",loginLogout);

@@ -42,3 +42,25 @@ export const getUsername=async(name)=>{
     let ok = data.find(profile=>profile.username==name);
     return (ok)?true:false;
 }
+
+// This function do a fetch (POST,PUT,DELETE,UPDATE)
+export const fetchApi=(callback,title,text)=>{
+    swal({
+        title: title,
+        text: text,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,                  
+    }).then(ok=>{
+        if(ok){
+            callback();
+        }else{
+            swal({
+                title:"ufff...",
+                text:"menos mal que no lo he eliminado.",
+                buttons:false
+            });
+            return false;
+        }
+    });
+}
